@@ -1,0 +1,45 @@
+syntax = "proto3";
+option go_package = "../../models";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+message Identity {
+    string tenantId = 1;
+    string projectId = 2;
+    string workflowId = 3;
+}
+
+message WorkflowManifest {
+    string id = 1;
+    google.protobuf.Timestamp createdAt = 6;
+
+    string startAt = 4;
+
+    map<string, TaskDefinition> states = 3;
+    Identity identity = 5;
+    bool waitForResponse = 7;
+}
+
+
+message TaskDefinition {
+    repeated string dependsOn = 1;
+    repeated string dependants = 2;
+    int64 maxRetries = 3;
+    repeated int64 backoff = 4;
+    repeated string retryableErrors = 6;
+    repeated string secretBindings = 7;
+    TaskType taskType = 8;
+    string taskIdentifier = 10;
+    map<string, google.protobuf.Value> config = 11;
+}
+
+enum TaskType {
+    TASK_TYPE_NATIVE = 0;
+    TASK_TYPE_HTTP_REMOTE = 1;
+    TASK_TYPE_LOOP = 2;
+    TASK_TYPE_RETURN = 3;
+    TASK_TYPE_DELAY = 4;
+    TASK_TYPE_INPUT = 5;
+    TASK_TYPE_REMOTE = 6;
+}
+

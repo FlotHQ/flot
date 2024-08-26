@@ -1,0 +1,105 @@
+syntax = "proto3";
+option go_package = "../../models";
+
+import "models/proto/manifest.proto";
+import "google/protobuf/struct.proto";
+
+
+message ErrorMessage {
+    int32 code = 1;
+    string message = 2;
+}
+
+
+enum LogLevel {
+    LOG_LEVEL_DEBUG = 0;
+    LOG_LEVEL_INFO = 1;
+    LOG_LEVEL_WARN = 2;
+    LOG_LEVEL_ERROR = 3;
+    LOG_LEVEL_FATAL = 4;
+}
+
+message LogMessage {
+    LogLevel level = 1;
+    string message = 2;
+}
+
+enum WorkflowEventType {
+    WORKFLOW_EVENT_TYPE_PENDING = 0;
+    WORKFLOW_EVENT_TYPE_STARTED = 1;
+    WORKFLOW_EVENT_TYPE_COMPLETED = 2;
+    WORKFLOW_EVENT_TYPE_FAILED = 3;
+}
+
+message WorkflowPendingEvent {
+    string manifestId = 1;
+}
+
+
+message WorkflowStartedEvent {
+    string workflowId = 1;
+    string manifestId = 3;
+    int64 startAt =  2;
+}
+
+message WorkflowCompletedEvent {
+    string workflowId = 1;
+    int64 duration = 2;
+}
+
+message WorkflowFailedEvent {
+    ErrorMessage error = 3;
+}
+
+message WorkflowEvent {
+    WorkflowEventType type = 1;
+    Identity identity = 2;
+    string executionId = 7;
+    string manifestId = 8;
+    oneof event {
+        WorkflowStartedEvent started = 3;
+        WorkflowCompletedEvent completed  = 4;
+        WorkflowFailedEvent failed  = 5;
+        WorkflowPendingEvent pending = 6;
+    }
+}
+
+enum TaskEventType {
+    TASK_EVENT_TYPE_STARTED = 0;
+    TASK_EVENT_TYPE_COMPLETED = 1;
+    TASK_EVENT_TYPE_FAILED = 2;
+    TASK_EVENT_TYPE_PENDING = 3;
+    TASK_EVENT_TYPE_BLOCKED = 4;
+}
+
+message TaskPendingEvent {
+}
+
+message TaskStartedEvent {
+    int64 startAt =  2;
+}
+
+message TaskCompletedEvent {
+    int64 duration = 2;
+    map<string, google.protobuf.Value> result = 3;
+}
+
+message TaskFailedEvent {
+    ErrorMessage error = 3;
+}
+
+
+message TaskEvent {
+    TaskEventType type = 6;
+    string taskId = 1;
+    Identity identity = 2;
+    string executionId = 8;
+    string manifestId = 9;
+    int64 retries = 10;
+    oneof event {
+        TaskStartedEvent started = 3;
+        TaskCompletedEvent completed = 4;
+        TaskFailedEvent failed = 5;
+        TaskPendingEvent pending = 7;
+    }
+}

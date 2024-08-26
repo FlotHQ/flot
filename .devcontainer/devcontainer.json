@@ -1,0 +1,27 @@
+{
+  "name": "Flot Development Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "biomejs.biome",
+        "aaron-bond.better-comments",
+        "golang.go",
+        "christian-kohler.path-intellisense",
+        "YoavBls.pretty-ts-errors",
+        "peterj.proto",
+        "Supermaven.supermaven",
+        "bradlc.vscode-tailwindcss",
+      ]
+    }
+  },
+  "forwardPorts": [8008],
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb"
+  },
+  "remoteUser": "root",
+  "postAttachCommand": "/bin/bash .devcontainer/setup.sh",
+}

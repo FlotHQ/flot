@@ -1,0 +1,41 @@
+syntax = "proto3";
+option go_package = "../../models";
+
+import "models/proto/manifest.proto";
+import "models/proto/events.proto";
+import "google/protobuf/struct.proto";
+
+message WorkflowExecutionState {
+    string executionId = 1;
+    string workflowId = 2;
+
+    map<string, TaskExecutionState> taskExecutionStates = 3;
+}
+
+enum Level {
+    LEVEL_DEBUG = 0;
+    LEVEL_INFO = 1;
+    LEVEL_WARN = 2;
+    LEVEL_ERROR = 3;
+    LEVEL_FATAL = 4;
+}
+
+message LogEntry {
+    string message = 1;
+    Level level = 2;
+}
+
+
+message TaskExecutionState {
+    string taskId = 1;
+
+    map<string, google.protobuf.Value> output = 2;
+
+   
+
+    TaskDefinition taskDefinition = 3;
+    
+    repeated LogEntry logs = 4;
+    TaskEventType state = 5;
+}
+

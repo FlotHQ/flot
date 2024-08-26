@@ -1,0 +1,16 @@
+version: '3.8'
+
+networks:
+ flot:
+
+services:
+ app:
+   privileged: true
+   build:
+     context: .
+     dockerfile: Dockerfile
+   container_name: app
+   volumes:
+     - ..:/workspace:cached
+
+   command: sleep infinity

@@ -1,0 +1,3 @@
+If you discover a security vulnerability within Flot, please send an e-mail to security@flot.so.
+
+All reports will be promptly addressed, and you'll be credited accordingly.
