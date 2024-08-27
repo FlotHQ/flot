@@ -1,4 +1,3 @@
-
 export function Component() {
-    return <div>Workflows</div>;
+	return <div>Workflows</div>;
 }

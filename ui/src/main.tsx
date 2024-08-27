@@ -2,21 +2,16 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
-import { createBrowserRouter, Link, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	RouterProvider,
+	useRouteError,
+} from "react-router-dom";
 import { Layout } from "./layout/index.tsx";
 import "@fontsource-variable/inter";
 import { StyledLink } from "./components/ui/styled-link.tsx";
 import { FlotLogo } from "./components/logo.tsx";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
-
-function ErrorBoundary(props: { children: React.ReactNode }) {
-	console.error(props);
-	return (
-		<div className="flex flex-col items-center justify-center h-full w-full">
-			<h1>Something went wrong</h1>
-		</div>
-	);
-}
 
 function NotFound() {
 	return (
@@ -34,10 +29,17 @@ function NotFound() {
 	);
 }
 
+function ErrorRoute() {
+	const error = useRouteError();
+	console.error(error);
+	return <div>Error: {JSON.stringify(error)}</div>;
+}
+
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <App />,
+		errorElement: <ErrorRoute />,
 		children: [
 			{
 				element: <NotFound />,
@@ -50,7 +52,7 @@ const router = createBrowserRouter([
 					{ path: "/workflows", lazy: () => import("./pages/workflows") },
 					{
 						path: "/workflows/:id",
-						lazy: () => import("./pages/workflows/[id]"),
+						lazy: () => import("./pages/workflows/[id].tsx"),
 					},
 					{ path: "/collections", lazy: () => import("./pages/collections") },
 					{

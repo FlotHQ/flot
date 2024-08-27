@@ -24,4 +24,8 @@
   },
   "remoteUser": "root",
   "postAttachCommand": "/bin/bash .devcontainer/setup.sh",
+  "mounts": [
+		"source=profile,target=/root,type=volume",
+		"target=/root/.vscode-server,type=volume"
+	],
 }

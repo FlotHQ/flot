@@ -5,7 +5,9 @@
 .ProseMirror-focused {
   outline: none;
 }
-
+.react-flow__node {
+  width: max-content; 
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
