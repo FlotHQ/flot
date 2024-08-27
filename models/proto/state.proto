@@ -8,7 +8,6 @@ import "google/protobuf/struct.proto";
 message WorkflowExecutionState {
     string executionId = 1;
     string workflowId = 2;
-
     map<string, TaskExecutionState> taskExecutionStates = 3;
 }
 
@@ -25,16 +24,10 @@ message LogEntry {
     Level level = 2;
 }
 
-
 message TaskExecutionState {
     string taskId = 1;
-
     map<string, google.protobuf.Value> output = 2;
-
-   
-
     TaskDefinition taskDefinition = 3;
-    
     repeated LogEntry logs = 4;
     TaskEventType state = 5;
 }

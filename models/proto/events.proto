@@ -4,12 +4,10 @@ option go_package = "../../models";
 import "models/proto/manifest.proto";
 import "google/protobuf/struct.proto";
 
-
 message ErrorMessage {
     int32 code = 1;
     string message = 2;
 }
-
 
 enum LogLevel {
     LOG_LEVEL_DEBUG = 0;
@@ -87,7 +85,6 @@ message TaskCompletedEvent {
 message TaskFailedEvent {
     ErrorMessage error = 3;
 }
-
 
 message TaskEvent {
     TaskEventType type = 6;

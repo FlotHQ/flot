@@ -12,14 +12,11 @@ message Identity {
 message WorkflowManifest {
     string id = 1;
     google.protobuf.Timestamp createdAt = 6;
-
     string startAt = 4;
-
     map<string, TaskDefinition> states = 3;
     Identity identity = 5;
     bool waitForResponse = 7;
 }
-
 
 message TaskDefinition {
     repeated string dependsOn = 1;
