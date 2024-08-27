@@ -1,0 +1,9 @@
+Contact: mailto:security@flot.so
+Expires: 2024-12-31T23:00:00.000Z
+Encryption: https://flot.so/pgp.txt
+Preferred-Languages: en
+Canonical: https://flot.so/.well-known/security.txt
+
+If you discover a security vulnerability within Flot, please send an e-mail to security@flot.so.
+
+All reports will be promptly addressed, and you'll be credited accordingly.
