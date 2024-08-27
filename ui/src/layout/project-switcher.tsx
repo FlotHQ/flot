@@ -78,21 +78,6 @@ export function ProjectSwitcher({ className }: Props) {
 				},
 			],
 		},
-		{
-			label: "Organizations",
-			organizations: organizations
-				.filter(
-					//@ts-expect-error TODO: fix types
-					(organization) => organization.id !== user.selectedOrganization.id,
-				)
-
-				.map((organization) => ({
-					//@ts-expect-error TODO: fix types
-					label: organization.name,
-					//@ts-expect-error TODO: fix types
-					value: organization.id,
-				})),
-		},
 	];
 
 	return (
@@ -135,7 +120,6 @@ export function ProjectSwitcher({ className }: Props) {
 										key={organization.value}
 										onSelect={() => {
 											selectOrganization(organization.value);
-
 											setOpen(false);
 										}}
 										className="text-sm"
@@ -205,11 +189,6 @@ export function ProjectSwitcher({ className }: Props) {
 						))}
 					</CommandList>
 					<CommandSeparator />
-					<CommandList>
-						<CommandGroup>
-							<CreateOrganizationDialog />
-						</CommandGroup>
-					</CommandList>
 				</Command>
 			</PopoverContent>
 		</Popover>
@@ -293,89 +272,3 @@ function CreateProjectDialog() {
 		</Dialog>
 	);
 }
-
-const CreateOrganizationDialog = () => {
-	const [showNewOrganizationDialog, setShowNewOrganizationDialog] =
-		React.useState(false);
-	const [isLoading] = useState(false);
-	const newOrganizationSchema = z.object({
-		name: z.string(),
-	});
-
-	const newOrganizationForm = useForm<z.infer<typeof newOrganizationSchema>>({
-		resolver: zodResolver(newOrganizationSchema),
-		defaultValues: {
-			name: "",
-		},
-	});
-
-	function onOrganizationSubmit(values: z.infer<typeof newOrganizationSchema>) {
-		toast.error("Not implemented yet", {
-			description: `${values.name} is not implemented yet`,
-		});
-	}
-
-	return (
-		<Dialog
-			open={showNewOrganizationDialog}
-			onOpenChange={(e) => {
-				if (!isLoading) {
-					setShowNewOrganizationDialog(e);
-				}
-			}}
-		>
-			<DialogTrigger asChild>
-				<CommandItem
-					onSelect={() => {
-						setShowNewOrganizationDialog(true);
-					}}
-				>
-					<PlusCircledIcon className="mr-2 h-5 w-5" />
-					Create Organization
-				</CommandItem>
-			</DialogTrigger>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Create organization</DialogTitle>
-					<DialogDescription>Add a new organization.</DialogDescription>
-				</DialogHeader>
-
-				<Form {...newOrganizationForm}>
-					<form
-						onSubmit={newOrganizationForm.handleSubmit(onOrganizationSubmit)}
-					>
-						<div>
-							<div className="space-y-4 py-2 pb-4">
-								<FormField
-									control={newOrganizationForm.control}
-									name="name"
-									render={({ field }) => (
-										<div>
-											<Label htmlFor="name">Organization name</Label>
-											<Input id="name" placeholder="Acme Inc." {...field} />
-										</div>
-									)}
-								/>
-							</div>
-						</div>
-						<DialogFooter>
-							<Button
-								variant="ghost"
-								disabled={newOrganizationForm.formState.isSubmitting}
-								className={cn(
-									isLoading ? "opacity-50 pointer-events-none" : "",
-								)}
-								onClick={() => setShowNewOrganizationDialog(false)}
-							>
-								Cancel
-							</Button>
-							<Button loading={isLoading} type="submit">
-								Create
-							</Button>
-						</DialogFooter>
-					</form>
-				</Form>
-			</DialogContent>
-		</Dialog>
-	);
-};
