@@ -16,26 +16,37 @@ export function Component() {
 				position: { x: 0, y: 0 },
 				type: "general",
 				data: {
-					label: "Start",
+					label: "On New Row",
 					isTrigger: true,
-					icon: "start",
-					collection: "Personal",
+					icon: "supabase.com",
+					collection: "Supabase",
 				},
 			},
 			{
 				id: "2",
 				type: "general",
-				position: { x: 200, y: 100 },
-				data: { label: "End", icon: "end", collection: "Personal" },
+				position: { x: 400, y: 0 },
+				data: {
+					label: "Generate Completion",
+					icon: "openai.com",
+					collection: "OpenAI",
+				},
 			},
 			{
 				id: "3",
 				type: "general",
-				position: { x: 300, y: 100 },
-				data: { label: "End", icon: "end", collection: "Personal" },
+				position: { x: 800, y: 0 },
+				data: {
+					label: "Send Email",
+					icon: "resend.com",
+					collection: "Resend",
+				},
 			},
 		],
-		edges: [],
+		edges: [
+			{ source: "1", target: "2", id: "1" },
+			{ source: "2", target: "3", id: "2" },
+		],
 	};
 
 	return (

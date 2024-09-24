@@ -1,19 +1,33 @@
 import { BaseFieldWrapper, type BaseFieldProps } from "./base";
 import { useState } from "react";
-import { Textarea } from "~/components/ui/textarea";
+import { useNodeId } from "reactflow";
+import { TagInput } from "~/components/tag-input/tag";
+import { useFieldReference } from "~/lib/fields/hooks";
 
 type Props = BaseFieldProps<string>;
 
 export function TextAreaField(props: Props) {
 	const [value, setValue] = useState(props.value);
 	const error = validateTextAreaField({ ...props, value });
+	const nodeId = useNodeId();
 
+	const { register } = useFieldReference();
+
+	if (!nodeId) {
+		return;
+	}
 	return (
-		<BaseFieldWrapper {...props} error={error}>
-			<Textarea
-				id={props.id}
+		<BaseFieldWrapper 
+			id={`${props.fieldKey}-${nodeId}`}
+		{...props} error={error}>
+			<TagInput
+				type="textarea"
+				fieldKey={props.fieldKey}
+				nodeId={nodeId}
+				id={`${props.fieldKey}-${nodeId}`}
 				value={value}
-				onChange={(e) => setValue(e.target.value)}
+				{...register(nodeId, props.fieldKey)}
+				onValueChange={(value) => setValue(value)}
 				placeholder={props.placeholder}
 			/>
 		</BaseFieldWrapper>

@@ -7,7 +7,7 @@ import {
 	RouterProvider,
 	useRouteError,
 } from "react-router-dom";
-import { Layout } from "./layout/index.tsx";
+import { DashboardLayout, Layout } from "./layout/index.tsx";
 import "@fontsource-variable/inter";
 import { StyledLink } from "./components/ui/styled-link.tsx";
 import { FlotLogo } from "./components/logo.tsx";
@@ -46,27 +46,38 @@ const router = createBrowserRouter([
 				path: "*",
 			},
 			{
-				element: <Layout />,
+				element: <DashboardLayout />,
 				children: [
 					{ path: "/", lazy: () => import("./pages/dashboard") },
+
+					{
+						path: "/collections",
+						lazy: () => import("./pages/collections"),
+					},
+					{ path: "/templates", lazy: () => import("./pages/templates") },
+					{ path: "/billing", lazy: () => import("./pages/billings") },
+				],
+			},
+			{
+				element: <Layout />,
+				children: [
 					{ path: "/workflows", lazy: () => import("./pages/workflows") },
 					{
 						path: "/workflows/:id",
 						lazy: () => import("./pages/workflows/[id].tsx"),
 					},
-					{ path: "/collections", lazy: () => import("./pages/collections") },
+
 					{
 						path: "/collections/:id",
 						lazy: () => import("./pages/collections/[id]"),
 					},
-					{ path: "/templates", lazy: () => import("./pages/templates") },
+
 					/*
         	{
 						path: "/organizations",
 						lazy: () => import("./pages/organizations"),
 					},
         */
-					{ path: "/billing", lazy: () => import("./pages/billings") },
 				],
 			},
 			{

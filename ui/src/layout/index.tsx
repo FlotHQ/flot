@@ -17,6 +17,8 @@ import { cn } from "~/lib/utils";
 import { StyledLink } from "~/components/ui/styled-link";
 import { Label } from "~/components/ui/label";
 import { ExpandedLogo, Logo } from "~/components/logo";
+import { Toaster } from "~/components/ui/sonner";
+import { useLocalStorage } from "usehooks-ts";
 
 const links: LinkEntry[] = [
 	{ label: "Home", href: "/", icon: Home },
@@ -34,15 +36,37 @@ const links: LinkEntry[] = [
 
 export function Layout() {
 	return (
-		<div className="flex relative h-full w-full">
-			<SideBar links={links} />
-			<div className="flex flex-col w-full h-screen">
-				<Header />
-				<div className="relative h-full w-full bg-zinc-50 dark:bg-inherit">
-					<Outlet />
+		<>
+			<Toaster />
+			<div className="flex relative h-screen w-full">
+				<SideBar links={links} />
+				<div className="flex flex-col w-full">
+					<Header />
+					<div className="flex-grow bg-zinc-50 dark:bg-inherit">
+						<Outlet />
+					</div>
 				</div>
 			</div>
-		</div>
+		</>
+	);
+}
+
+export function DashboardLayout() {
+	return (
+		<>
+			<Toaster />
+			<div className="flex relative h-screen w-full">
+				<SideBar links={links} />
+				<div className="flex flex-col w-full">
+					<Header />
+					<div className="flex-grow bg-zinc-50 dark:bg-inherit ">
+						<div className="px-4 sm:px-6 lg:px-8 w-full mt-24  gap-4 flex flex-col max-w-screen-lg mx-auto">
+							<Outlet />
+						</div>
+					</div>
+				</div>
+			</div>
+		</>
 	);
 }
 
@@ -77,13 +101,9 @@ type SideBarProps = {
 };
 
 function SideBar(props: SideBarProps) {
-	const [expanded, setExpanded] = useState(true);
+	const [expanded, setExpanded] = useLocalStorage("sidebar-expanded", true);
 	const location = useLocation();
 
-	useLayoutEffect(() => {
-		const expanded = localStorage.getItem("sidebar-expanded") === "true";
-		setExpanded(expanded);
-	}, []);
 
 	function toggleExpanded() {
 		const newExpanded = !expanded;

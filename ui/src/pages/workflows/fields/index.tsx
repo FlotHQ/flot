@@ -7,6 +7,9 @@ import { TextField } from "./text";
 import { DateField } from "./date";
 import { SwitchField } from "./switch";
 import { TextAreaField } from "./textarea";
+import { DateTimeField } from "./datetime";
+import { TimeField } from "./time";
+import { GroupField } from "./group";
 
 const fields = {
 	text: TextField,
@@ -14,8 +17,11 @@ const fields = {
 	select: SelectField,
 	file: FileField,
 	date: DateField,
+	datetime: DateTimeField,
+	time: TimeField,
 	boolean: SwitchField,
 	textarea: TextAreaField,
+	group: GroupField,
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

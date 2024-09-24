@@ -14,6 +14,7 @@ import { useTheme } from "~/lib/theme/hooks";
 import { cn } from "~/lib/utils";
 import { GeneralNode } from "./nodes/general";
 import { isValidConnection } from "./utils";
+import { FieldReferenceProvider } from "~/lib/fields/provider";
 
 type Props = {
 	initialNodes: {
@@ -52,42 +53,32 @@ export function WorkflowCanvas(props: Props) {
 	);
 
 	return (
-		<ReactFlow
-			nodes={nodes}
-			edges={edges}
-			onNodesChange={onNodesChange}
-			onEdgesChange={onEdgesChange}
-			onConnect={onConnect}
-			nodeTypes={nodeTypes}
-			proOptions={{
-				hideAttribution: true,
-			}}
-			isValidConnection={_isValidConnection}
-			selectionOnDrag={false}
-			selectNodesOnDrag={false}
-		>
-			<Background
-				color={theme === "dark" ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.3)"}
-				className={cn(
-					"-z-10 ",
-					theme === "dark" ? "bg-[#727272]" : "bg-slate-100/45",
-				)}
-				variant={BackgroundVariant.Dots}
-				style={{
-					// #111111
-					background:
-						theme === "dark"
-							? "linear-gradient(197deg, hsl(0, 0%, 8%), hsl(0, 0%, 3%) 60%)"
-							: "hsl(0deg 0% 98%)",
-					// inner shadow
-					boxShadow:
-						theme === "dark"
-							? "inset 0 0 50px hsl(0, 0%, 8%)"
-							: "inset 0 0 30px hsl(0, 0%, 90%)",
+		<FieldReferenceProvider>
+			<ReactFlow
+				nodes={nodes}
+				edges={edges}
+				fitView
+				maxZoom={1}
+				onNodesChange={onNodesChange}
+				onEdgesChange={onEdgesChange}
+				onConnect={onConnect}
+				nodeTypes={nodeTypes}
+				proOptions={{
+					hideAttribution: true,
 				}}
-				gap={24}
-				size={2}
-			/>
-		</ReactFlow>
+				isValidConnection={_isValidConnection}
+				selectionOnDrag={false}
+				selectNodesOnDrag={false}
+			>
+				<Background
+					className={cn(
+						"-z-10 [&_circle]:fill-gray-300 dark:[&_circle]:fill-muted bg-gray-50 dark:bg-background",
+					)}
+					variant={BackgroundVariant.Dots}
+					gap={24}
+					size={2}
+				/>
+			</ReactFlow>
+		</FieldReferenceProvider>
 	);
 }

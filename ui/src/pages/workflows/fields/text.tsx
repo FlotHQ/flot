@@ -1,6 +1,9 @@
-import { Input } from "~/components/ui/input";
 import { BaseFieldWrapper, type BaseFieldProps } from "./base";
 import { useState } from "react";
+
+import { useFieldReference } from "~/lib/fields/hooks";
+import { useNodeId } from "reactflow";
+import { TagInput } from "~/components/tag-input/tag";
 
 type Props = {
 	pattern?: { value: string; message: string };
@@ -9,17 +12,31 @@ type Props = {
 export function TextField(props: Props) {
 	const [value, setValue] = useState(props.value);
 	const error = validateTextField({ ...props, value });
+	const nodeId = useNodeId();
+
+	const { register } = useFieldReference();
+
+	if (!nodeId) {
+		return;
+	}
 
 	return (
-		<BaseFieldWrapper {...props} error={error}>
-			<Input
-				size={12}
-				type="text"
-				id={props.id}
-				value={value}
-				onChange={(e) => setValue(e.target.value)}
-				placeholder={props.placeholder}
+		<BaseFieldWrapper
+			id={`${props.fieldKey}-${nodeId}`}
+		{...props} error={error}>
+		<TagInput
+			type="text"
+			fieldKey={props.fieldKey}
+			nodeId={nodeId}
+			{...register(nodeId, props.fieldKey)}
+			value={value}
+			onValueChange={(value) => {
+				console.log(value);
+				setValue(value)
+			}}
+			placeholder={props.placeholder}
 			/>
+		
 		</BaseFieldWrapper>
 	);
 }

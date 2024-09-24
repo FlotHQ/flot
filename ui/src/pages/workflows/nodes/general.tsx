@@ -1,4 +1,3 @@
-import type { NodeProps } from "reactflow";
 import type { NodeData } from "./types";
 import { Badge } from "~/components/ui/badge";
 import { Card, CardHeader } from "~/components/ui/card";
@@ -6,14 +5,21 @@ import { cn } from "~/lib/utils";
 import { useTheme } from "~/lib/theme/hooks";
 import { RelativeHandle } from "./handle";
 import { Input } from "~/components/ui/input";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	Popover,
 	PopoverTrigger,
 	PopoverContent,
+	PopoverAnchor,
+	PopoverArrow,
 } from "~/components/ui/popover";
 import { Field } from "../fields";
 import { ScrollArea } from "~/components/ui/scroll-area";
+import { useFieldReference } from "~/lib/fields/hooks";
+import { Button } from "~/components/ui/button";
+import { toast } from "sonner";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import type { NodeProps } from "reactflow";
 
 export function GeneralNode(props: NodeProps<NodeData>) {
 	const { theme } = useTheme();
@@ -76,9 +82,18 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 			maxSize: 1024 * 1024 * 2,
 		},
 		{ key: "isActive", label: "Is Active", type: "boolean" },
-		{ key: "date", label: "Date", type: "date" },
 		{
-			key: "description",
+			key: "group",
+			label: "Group",
+			type: "group",
+			fields: [
+				{ key: "date1", label: "Date", type: "date", description: "testing" },
+				{ key: "date2", label: "Date", type: "datetime" },
+				{ key: "date3", label: "Date", type: "time" },
+			],
+		},
+		{
+			key: "description2",
 			label: "Description",
 			type: "textarea",
 			optional: true,
@@ -86,27 +101,41 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 		},
 	];
 
+	const { selectedField, ref, inject } = useFieldReference();
+
+	useEffect(() => {
+		console.log("selectedField", selectedField);
+	}, [selectedField]);
+
+	const reactflowPaneRef = useRef<HTMLDivElement>();
+
+	useEffect(() => {
+		const pane = document.querySelector(".react-flow__pane") as HTMLDivElement;
+		if (!pane) {
+			toast.error("pane not found");
+			return;
+		}
+		reactflowPaneRef.current = pane;
+	}, []);
+
+	const fieldPanelRef = useRef<HTMLDivElement>(null);
+
 	return (
 		<Popover modal>
 			<PopoverTrigger>
-				<div className="relative">
+				<div className="relative ">
 					{props.data.isTrigger && (
 						<Badge
 							variant="outline"
-							className="-z-20 absolute bottom-[calc(100%-0.5px)] h-[21px] border-b-0 rounded-b-none font-medium right-4 bg-background"
+							className="-z-20 absolute bottom-[calc(100%-0.5px)] h-[21px] border-b-0 rounded-b-none font-medium right-4"
 						>
 							Trigger
 						</Badge>
 					)}
+
 					<Card
-						style={{
-							background:
-								theme === "dark"
-									? "radial-gradient(at top left,  #101010 60%, #0d0d0d)"
-									: "radial-gradient(at left top, rgb(255 255 255) 60%, hsl(0,0%,98%))",
-						}}
 						className={cn(
-							" bg-background border-foreground/15  hover:cursor-pointer z-50  rounded-lg   group relative w-[300px] border-[1px] p-0 ",
+							"hover:cursor-pointer z-50  rounded-lg   group relative w-[300px] border-[1px] p-0 ",
 						)}
 					>
 						<CardHeader className="px-3 py-4 pb-4 h-full relative ">
@@ -137,9 +166,11 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 								className="pl-2 h-full flex justify-between relative "
 							>
 								<div className="space-x-[11px] w-full flex items-center">
-									<div className="h-[29px] w-[29px]">
-										<img src={props.data.icon} alt="" />
-									</div>
+									<img
+										className="object-cover h-[29px] w-[29px]  rounded-sm"
+										src={`https://cdn.brandfetch.io/${props.data.icon}/icon/theme/${theme}/fallback/transparent/h/200/w/200`}
+										alt={props.data.collection}
+									/>
 
 									<div className="w-full flex flex-col justify-center">
 										<p className="text-foreground/80 w-max  -mb-[1px] font-[550] text-[12px] leading-none">
@@ -151,7 +182,7 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 												readOnly={true}
 												defaultValue={nodeName}
 												className={cn(
-													"px-0 py-0 font-semibold text-[13px]  pointer-events-none  w-full max-w-[180px] border-y-0 h-5 rounded-none border-x-0 focus-visible:ring-0 shadow-none",
+													"px-0 py-0 bg-transparent font-semibold text-[13px]  pointer-events-none  w-full max-w-[180px] border-y-0 h-5 rounded-none border-x-0 focus-visible:ring-0 shadow-none",
 												)}
 												size={12}
 											/>
@@ -163,24 +194,74 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 					</Card>
 				</div>
 			</PopoverTrigger>
+
 			<PopoverContent
 				align="center"
+				autoFocus={false}
+				collisionBoundary={
+					reactflowPaneRef.current ? [reactflowPaneRef.current] : []
+				}
 				side="right"
+				ref={fieldPanelRef}
 				className="w-[400px] pl-3 pr-[1px] pt-4 pb-0 "
 			>
+				<PopoverArrow className="fill-foreground/20" />
 				<ScrollArea className=" h-[500px] w-full pr-3 ">
 					<div className="space-y-3 px-[1px] pb-8">
 						{fields.map((field) => (
-							<Field
-								{...field}
+							<Popover
 								key={field.key}
-								value={input[field.key]}
-								onChange={(value: unknown) =>
-									handleFieldChange(field.key, value)
-								}
-								label={field.label}
-								id={field.key}
-							/>
+								open={!!selectedField && selectedField.fieldKey === field.key}
+							>
+								<PopoverAnchor>
+									<Field
+										{...field}
+										key={field.key}
+										nodeId={props.id}
+										value={input[field.key]}
+										onValueChange={(value: unknown) =>
+											handleFieldChange(field.key, value)
+										}
+										label={field.label}
+										fieldKey={field.key}
+									/>
+								</PopoverAnchor>
+								<PopoverPrimitive.Portal container={fieldPanelRef.current}>
+									<PopoverPrimitive.Content
+										ref={ref}
+										sideOffset={16}
+										autoFocus={false}
+										side="left"
+										align="start"
+										alignOffset={18}
+										collisionBoundary={
+											reactflowPaneRef.current
+												? [reactflowPaneRef.current, fieldPanelRef.current]
+												: []
+										}
+										collisionPadding={{
+											left: -200,
+										}}
+										sticky="always"
+										className={cn(
+											"z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+										)}
+									>
+										<Button
+											autoFocus={false}
+											onFocus={() => toast.success("on focus")}
+											onClick={() => {
+												inject("user.name", {
+													label: "Name",
+													type: "text",
+												});
+											}}
+										>
+											Click me
+										</Button>
+									</PopoverPrimitive.Content>
+								</PopoverPrimitive.Portal>
+							</Popover>
 						))}
 					</div>
 				</ScrollArea>

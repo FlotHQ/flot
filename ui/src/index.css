@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+.tiptap p.is-editor-empty:first-child::before {
+  color:hsl(var(--muted-foreground));
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+
+
+.tiptap-text {
+  display: table;
+  height: 100%;
+}
+
+.tiptap .ProseMirror {
+  display: table;
+  height: 100%;
+}
+
 .ProseMirror-focused {
   outline: none;
 }
@@ -35,6 +55,7 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 89.8%;
+    --input-background: 0 0%  97%;
     --input: 0 0% 89.8%;
     --ring: 0 0% 5%;
 
@@ -45,10 +66,10 @@
     --background: 0 0% 6%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 5%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 5%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 0% 98%;
@@ -67,6 +88,7 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 14.9%;
+    --input-background: 0 0% 10%;
     --input: 0 0% 14.9%;
     --ring: 0 0% 83.1%;
   }

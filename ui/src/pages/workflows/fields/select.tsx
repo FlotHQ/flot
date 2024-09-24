@@ -30,11 +30,15 @@ export function SelectField(props: Props) {
 	const selected = props.options?.find((o) => o.value === props.value);
 
 	return (
-		<BaseFieldWrapper {...props} error={error}>
+		<BaseFieldWrapper
+			id={`${props.nodeId}-${props.fieldKey}`}
+			{...props}
+			error={error}
+		>
 			<Popover open={open} onOpenChange={setOpen}>
 				<PopoverTrigger
 					className={cn(
-						"flex h-9 w-full items-center relative justify-between whitespace-nowrap rounded-md border border-foreground/15 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+						"flex h-9 w-full items-center relative justify-between whitespace-nowrap rounded-md border border-foreground/15 bg-input-background px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
 						error && "border-red-500",
 					)}
 				>
@@ -60,7 +64,7 @@ export function SelectField(props: Props) {
 									<CommandItem
 										key={option.value}
 										onSelect={() => {
-											props.onChange?.(option.value);
+											props.onValueChange?.(option.value);
 											setOpen(false);
 										}}
 										value={option.value}
