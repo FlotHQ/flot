@@ -38,9 +38,10 @@ export function GroupField({ label, ...props }: GroupFieldProps) {
 							{...field}
 							key={field.key}
 							value={value[field.key]}
-							onChange={(value: unknown) => handleFieldChange(field.key, value)}
+							onValueChange={(value: unknown) =>
+								handleFieldChange(field.key, value)
+							}
 							label={field.label}
-							id={field.key}
 						/>
 					))}
 				</CollapsibleContent>

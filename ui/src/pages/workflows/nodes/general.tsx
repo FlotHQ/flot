@@ -13,13 +13,15 @@ import {
 	PopoverAnchor,
 	PopoverArrow,
 } from "~/components/ui/popover";
-import { Field } from "../fields";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useFieldReference } from "~/lib/fields/hooks";
 import { Button } from "~/components/ui/button";
 import { toast } from "sonner";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import type { NodeProps } from "reactflow";
+import type { Field as FieldType } from "../fields/types";
+import { Field } from "../fields";
+import { ViewStackProvider } from "~/lib/view-stack/provider";
 
 export function GeneralNode(props: NodeProps<NodeData>) {
 	const { theme } = useTheme();
@@ -29,11 +31,20 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 	const [nodeName] = useState(props.data.label);
 
 	const handleFieldChange = <T,>(field: string, value: T) => {
-		console.log(field, value);
-		setInput((prev) => ({ ...prev, [field]: value }));
+		setInput((prev) => ({
+			...prev,
+			[field]: value,
+		}));
 	};
 
 	const fields = [
+		{
+			key: "query",
+			label: "Query",
+			type: "query",
+			placeholder: "Modify filters",
+			description: "Filter the records",
+		},
 		{
 			key: "name",
 			label: "Name",
@@ -99,26 +110,7 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 			optional: true,
 			description: "Describe what kind of data you want to collect",
 		},
-	];
-
-	const { selectedField, ref, inject } = useFieldReference();
-
-	useEffect(() => {
-		console.log("selectedField", selectedField);
-	}, [selectedField]);
-
-	const reactflowPaneRef = useRef<HTMLDivElement>();
-
-	useEffect(() => {
-		const pane = document.querySelector(".react-flow__pane") as HTMLDivElement;
-		if (!pane) {
-			toast.error("pane not found");
-			return;
-		}
-		reactflowPaneRef.current = pane;
-	}, []);
-
-	const fieldPanelRef = useRef<HTMLDivElement>(null);
+	] as FieldType[];
 
 	return (
 		<Popover modal>
@@ -195,20 +187,56 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 				</div>
 			</PopoverTrigger>
 
-			<PopoverContent
-				align="center"
-				autoFocus={false}
-				collisionBoundary={
-					reactflowPaneRef.current ? [reactflowPaneRef.current] : []
-				}
-				side="right"
-				ref={fieldPanelRef}
-				className="w-[400px] pl-3 pr-[1px] pt-4 pb-0 "
-			>
-				<PopoverArrow className="fill-foreground/20" />
-				<ScrollArea className=" h-[500px] w-full pr-3 ">
-					<div className="space-y-3 px-[1px] pb-8">
-						{fields.map((field) => (
+			<FieldsPanel
+				input={input}
+				nodeId={props.id}
+				fields={fields}
+				handleFieldChange={handleFieldChange}
+			/>
+		</Popover>
+	);
+}
+
+type FieldsPanelProps = {
+	fields: FieldType[];
+	nodeId: string;
+	input: Record<string, unknown>;
+	handleFieldChange: <T>(field: string, value: T) => void;
+};
+
+function FieldsPanel(props: FieldsPanelProps) {
+	const { selectedField, ref, inject } = useFieldReference();
+
+	const reactflowPaneRef = useRef<HTMLDivElement>();
+
+	useEffect(() => {
+		//TODO: fix this later
+		const pane = document.querySelector(".react-flow__pane") as HTMLDivElement;
+		if (!pane) {
+			toast.error("pane not found");
+			return;
+		}
+		reactflowPaneRef.current = pane;
+	}, []);
+
+	const fieldPanelRef = useRef<HTMLDivElement>(null);
+
+	return (
+		<PopoverContent
+			align="center"
+			autoFocus={false}
+			collisionBoundary={
+				reactflowPaneRef.current ? [reactflowPaneRef.current] : []
+			}
+			side="right"
+			ref={fieldPanelRef}
+			className="w-[400px] pl-3 pr-[1px] pt-4 pb-0 "
+		>
+			<PopoverArrow className="fill-foreground/20" />
+			<ScrollArea className=" h-[500px] w-full pr-3 ">
+				<div className="space-y-3 px-[1px] pb-8">
+					<ViewStackProvider>
+						{props.fields.map((field) => (
 							<Popover
 								key={field.key}
 								open={!!selectedField && selectedField.fieldKey === field.key}
@@ -217,10 +245,10 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 									<Field
 										{...field}
 										key={field.key}
-										nodeId={props.id}
-										value={input[field.key]}
+										nodeId={props.nodeId}
+										value={props.input[field.key]}
 										onValueChange={(value: unknown) =>
-											handleFieldChange(field.key, value)
+											props.handleFieldChange(field.key, value)
 										}
 										label={field.label}
 										fieldKey={field.key}
@@ -263,9 +291,9 @@ export function GeneralNode(props: NodeProps<NodeData>) {
 								</PopoverPrimitive.Portal>
 							</Popover>
 						))}
-					</div>
-				</ScrollArea>
-			</PopoverContent>
-		</Popover>
+					</ViewStackProvider>
+				</div>
+			</ScrollArea>
+		</PopoverContent>
 	);
 }

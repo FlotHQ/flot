@@ -21,22 +21,20 @@ export function TextField(props: Props) {
 	}
 
 	return (
-		<BaseFieldWrapper
-			id={`${props.fieldKey}-${nodeId}`}
-		{...props} error={error}>
-		<TagInput
-			type="text"
-			fieldKey={props.fieldKey}
-			nodeId={nodeId}
-			{...register(nodeId, props.fieldKey)}
-			value={value}
-			onValueChange={(value) => {
-				console.log(value);
-				setValue(value)
-			}}
-			placeholder={props.placeholder}
+		<BaseFieldWrapper {...props} error={error}>
+			<TagInput
+				key={nodeId}
+				type="text"
+				fieldKey={props.fieldKey}
+				nodeId={nodeId}
+				{...register(nodeId, props.fieldKey)}
+				value={value}
+				onValueChange={(value) => {
+					console.log(value);
+					setValue(value);
+				}}
+				placeholder={props.placeholder}
 			/>
-		
 		</BaseFieldWrapper>
 	);
 }

@@ -1,12 +1,7 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import { createExtensions } from "./extensions";
 import { cn } from "~/lib/utils";
-import {
-	type FocusEvent,
-	type HTMLAttributes,
-	useEffect,
-	useState,
-} from "react";
+import { type HTMLAttributes, useEffect, useState } from "react";
 import {
 	type BaseFieldProps,
 	BaseFieldWrapper,
@@ -37,7 +32,7 @@ type Props = {
 
 export function TagInput({ type, ...props }: Props) {
 	const fieldRef = useFieldReference();
-	const [content, setContent] = useState(props.value);
+	const [content] = useState(props.value);
 
 	const editor = useEditor({
 		extensions: createExtensions({

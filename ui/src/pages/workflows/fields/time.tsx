@@ -10,7 +10,6 @@ export function TimeField(props: BaseFieldProps<string>) {
 		<BaseFieldWrapper {...props} error={error}>
 			<Input
 				type="time"
-				id={props.id}
 				placeholder={props.placeholder}
 				value={value}
 				onChange={(e) => setValue(e.target.value)}

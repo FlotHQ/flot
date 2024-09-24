@@ -10,6 +10,7 @@ import { TextAreaField } from "./textarea";
 import { DateTimeField } from "./datetime";
 import { TimeField } from "./time";
 import { GroupField } from "./group";
+import { QueryField } from "./query";
 
 const fields = {
 	text: TextField,
@@ -22,6 +23,7 @@ const fields = {
 	boolean: SwitchField,
 	textarea: TextAreaField,
 	group: GroupField,
+	query: QueryField,
 };
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

@@ -8,9 +8,7 @@ export function DateField(props: BaseFieldProps<string>) {
 	const error = validateDateField({ ...props, value });
 
 	return (
-		<BaseFieldWrapper
-		id={`${props.fieldKey}-${props.nodeId}`}
-		{...props} error={error}>
+		<BaseFieldWrapper {...props} error={error}>
 			<Input
 				type="date"
 				placeholder={props.placeholder}

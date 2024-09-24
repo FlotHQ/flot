@@ -10,7 +10,6 @@ export function NumberField(props: BaseFieldProps<number>) {
 		<BaseFieldWrapper {...props} error={error}>
 			<Input
 				type="number"
-				id={props.id}
 				placeholder={props.placeholder}
 				value={value}
 				onChange={(e) => setValue(e.target.valueAsNumber)}
