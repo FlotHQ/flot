@@ -10,7 +10,7 @@ import { TextAreaField } from "./textarea";
 import { DateTimeField } from "./datetime";
 import { TimeField } from "./time";
 import { GroupField } from "./group";
-import { QueryField } from "./query";
+import { QueryField } from "./query/query-field";
 
 const fields = {
 	text: TextField,
