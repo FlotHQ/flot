@@ -31,3 +31,4 @@ flot_data
 .env.test.local
 .env.production.local
 .pnpm-store
+*/**/flot-data

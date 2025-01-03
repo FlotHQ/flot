@@ -8,7 +8,6 @@ install:
 	cd ./ui && pnpm install
 
 dev: install 
-	# watch all .go files and run examples/base/main.go on change 
 	pnpm dlx concurrently "cd ./ui && pnpm dev" "pnpm dlx nodemon --watch . --ext go --exec go run ./examples/base/main.go serve"
 
 build:
