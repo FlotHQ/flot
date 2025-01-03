@@ -1,31 +1,32 @@
 {
-  "name": "Flot Development Environment",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspace",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "biomejs.biome",
-        "aaron-bond.better-comments",
-        "golang.go",
-        "christian-kohler.path-intellisense",
-        "YoavBls.pretty-ts-errors",
-        "peterj.proto",
-        "Supermaven.supermaven",
-        "bradlc.vscode-tailwindcss",
-      ]
-    }
-  },
-  "forwardPorts": [8008],
-  "hostRequirements": {
-    "cpus": 4,
-    "memory": "8gb"
-  },
-  "remoteUser": "root",
-  "postAttachCommand": "/bin/bash .devcontainer/setup.sh",
-  "mounts": [
+	"name": "Flot Development Environment",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"biomejs.biome",
+				"aaron-bond.better-comments",
+				"golang.go",
+				"christian-kohler.path-intellisense",
+				"YoavBls.pretty-ts-errors",
+				"peterj.proto",
+				"bradlc.vscode-tailwindcss"
+			]
+		}
+	},
+	"forwardPorts": [8008],
+	"hostRequirements": {
+		"cpus": 4,
+		"memory": "8gb"
+	},
+	"remoteUser": "root",
+	"postAttachCommand": "/bin/bash .devcontainer/setup.sh",
+	"mounts": [
 		"source=profile,target=/root,type=volume",
-		"target=/root/.vscode-server,type=volume"
-	],
+		"target=/root/.vscode-server,type=volume",
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached",
+		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+	]
 }
