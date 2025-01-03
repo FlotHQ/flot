@@ -80,29 +80,29 @@ export function NavUser({
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <Sparkles />
+                            <DropdownMenuItem className="flex items-center gap-2">
+                                <Sparkles className="w-4 h-4" />
                                 Upgrade to Pro
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
+                            <DropdownMenuItem className="flex items-center gap-2">
+                                <BadgeCheck className="w-4 h-4" />
                                 Account
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <CreditCard />
+                            <DropdownMenuItem className="flex items-center gap-2">
+                                <CreditCard className="w-4 h-4" />
                                 Billing
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Bell />
+                            <DropdownMenuItem className="flex items-center gap-2">
+                                <Bell className="w-4 h-4" />
                                 Notifications
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
-                            <LogOut />
+                        <DropdownMenuItem className="flex items-center gap-2">
+                            <LogOut className="w-4 h-4" />
                             Log out
                         </DropdownMenuItem>
                     </DropdownMenuContent>

@@ -32,3 +32,5 @@ flot_data
 .env.production.local
 .pnpm-store
 */**/flot-data
+
+pkg

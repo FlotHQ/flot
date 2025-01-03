@@ -1,21 +1,13 @@
-
-
 import * as React from "react"
 import {
     AudioWaveform,
-    BookOpen,
-    Bot,
-    Command,
-    Frame,
+    BookOpen, Command,
     GalleryVerticalEnd,
-    Map,
-    PieChart,
-    Settings2,
+    Gauge,
+    Settings2
 } from "lucide-react"
 
-import { NavMain } from "~/components/app-shell/main"
 import { NavUser } from "~/components/app-shell/user"
-import { TeamSwitcher } from "~/components/app-shell/team-switcher"
 import {
     Sidebar,
     SidebarContent,
@@ -23,9 +15,15 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "~/components/ui/sidebar"
-import { NavProjects } from "~/components/app-shell/projects"
+import { NavResource } from "~/components/app-shell/resources"
+import { NavMain } from "~/components/app-shell/main"
+import {
+    Component,
+    Workflow, LayoutTemplate
+} from "lucide-react"
+import { Logo } from "../logo"
+import { Link } from "react-router-dom"
 
-// This is sample data.
 const data = {
     user: {
         name: "shadcn",
@@ -49,121 +47,69 @@ const data = {
             plan: "Free",
         },
     ],
-    navMain: [
-        {
-            title: "Playground",
-            url: "#",
-            icon: Command,
-            isActive: true,
-            items: [
-                {
-                    title: "History",
-                    url: "#",
-                },
-                {
-                    title: "Starred",
-                    url: "#",
-                },
-                {
-                    title: "Settings",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Models",
-            url: "#",
-            icon: Bot,
-            items: [
-                {
-                    title: "Genesis",
-                    url: "#",
-                },
-                {
-                    title: "Explorer",
-                    url: "#",
-                },
-                {
-                    title: "Quantum",
-                    url: "#",
-                },
-            ],
-        },
+    navResources: [
         {
             title: "Documentation",
-            url: "#",
+            url: "/docs",
             icon: BookOpen,
-            items: [
-                {
-                    title: "Introduction",
-                    url: "#",
-                },
-                {
-                    title: "Get Started",
-                    url: "#",
-                },
-                {
-                    title: "Tutorials",
-                    url: "#",
-                },
-                {
-                    title: "Changelog",
-                    url: "#",
-                },
-            ],
         },
         {
             title: "Settings",
             url: "#",
             icon: Settings2,
             items: [
-                {
-                    title: "General",
-                    url: "#",
-                },
-                {
-                    title: "Team",
-                    url: "#",
-                },
-                {
-                    title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
-                },
+                { title: "General", url: "#" },
+                { title: "Team", url: "#" },
+                { title: "Billing", url: "#" },
+                { title: "Limits", url: "#" },
             ],
         },
     ],
-    projects: [
+    navMain: [
         {
-            name: "Design Engineering",
-            url: "#",
-            icon: Frame,
+            name: "Dashboard",
+            url: "/",
+            icon: Gauge,
         },
         {
-            name: "Sales & Marketing",
-            url: "#",
-            icon: PieChart,
+            name: "Workflows",
+            url: "/workflows",
+            icon: Workflow
         },
         {
-            name: "Travel",
-            url: "#",
-            icon: Map,
+            name: "Collections",
+            url: "/collections",
+            icon: Component
+        },
+        {
+            name: "Templates",
+            url: "/templates",
+            icon: LayoutTemplate
         },
     ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
-        <Sidebar collapsible="icon" {...props}>
+        <Sidebar collapsible="icon" className="@container/sidebar" {...props}>
             <SidebarHeader>
-                <TeamSwitcher teams={data.teams} />
+                <Link to="/" className="flex items-center gap-2 pl-0  mt-0 @[10rem]/sidebar:pl-2 @[10rem]/sidebar:mt-3 ">
+                    <div className="flex aspect-square size-8 p-2 items-center justify-center rounded-lg bg-foreground text-sidebar-primary-foreground">
+                        <Logo />
+                    </div>
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-semibold">
+                            Flot
+                        </span>
+                        <span className="truncate text-xs text-muted-foreground">
+                            Make it flow
+                        </span>
+                    </div>
+                </Link>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={data.navMain} />
-                <NavProjects projects={data.projects} />
+                <NavMain projects={data.navMain} />
+                <NavResource items={data.navResources} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={data.user} />

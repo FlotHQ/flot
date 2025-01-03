@@ -1,653 +1,545 @@
 import { Input } from "~/components/ui/input";
-import { Search, PlusIcon } from "lucide-react";
+import { Search, PlusIcon, Activity, Clock } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import { CSS } from "@dnd-kit/utilities";
+import { ScrollArea, } from "~/components/ui/scroll-area";
 import {
 	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
+	CardContent, CardHeader,
+	CardTitle
 } from "~/components/ui/card";
 import { Switch } from "~/components/ui/switch";
-import { Label } from "~/components/ui/label";
-import { cn } from "~/lib/utils";
-import { GripVertical } from "lucide-react";
-import {
-	DndContext,
-	closestCenter,
-	KeyboardSensor,
-	PointerSensor,
-	useSensor,
-	useSensors,
-	type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-	arrayMove,
-	SortableContext,
-	sortableKeyboardCoordinates,
-	useSortable,
-	verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "~/components/ui/dialog";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-	FormField,
-	FormItem,
-	FormLabel,
-	FormControl,
-	FormMessage,
-	Form,
-} from "~/components/ui/form";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { Badge } from "~/components/ui/badge";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "~/components/ui/dialog";
 import {
 	ContextMenu,
-	ContextMenuTrigger,
 	ContextMenuContent,
 	ContextMenuItem,
+	ContextMenuTrigger
 } from "~/components/ui/context-menu";
-import { Pencil1Icon, TrashIcon } from "@radix-ui/react-icons";
-import { toast } from "sonner";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "~/components/ui/alert-dialog";
+import { motion, AnimatePresence } from "framer-motion";
+
+dayjs.extend(relativeTime);
+
+
+const HealthTimeLineOptions = ["healthy", "warning", "error", "inactive"]
 
 type Workflow = {
 	id: string;
 	title: string;
 	description: string;
+	enabled: boolean;
 	services: {
 		name: string;
-		// apple.com, figma.com
 		icon: string;
 	}[];
-	updatedAt: number;
+	lastRan: number; // Unix timestamp
+	avgRunTime: number;
+	healthTimeline: ("healthy" | "warning" | "error" | "inactive")[];
+	tags: string[];
 };
+
+
+const randomHealthTimeline = () => {
+	return Array.from({ length: 5 }, () => HealthTimeLineOptions[Math.floor(Math.random() * HealthTimeLineOptions.length)]) as ("healthy" | "warning" | "error" | "inactive")[]
+}
 
 const workflows: Workflow[] = [
 	{
 		id: "wf001",
 		title: "Customer Onboarding",
 		description: "Process for welcoming and setting up new customers",
+		enabled: true,
 		services: [
 			{ name: "Gmail", icon: "gmail.com" },
 			{ name: "Slack", icon: "slack.com" },
 			{ name: "Zoom", icon: "zoom.us" },
 		],
-		updatedAt: Date.now(),
+		lastRan: Date.now() - 2 * 24 * 60 * 60 * 1000, // 2 days ago
+		avgRunTime: 100 + Math.random() * 100,
+		healthTimeline: randomHealthTimeline(),
+		tags: ["development", "communication"]
 	},
 	{
 		id: "wf002",
 		title: "Sales Pipeline Management",
 		description: "Track and manage sales opportunities",
+		enabled: true,
 		services: [
 			{ name: "Salesforce", icon: "salesforce.com" },
 			{ name: "HubSpot", icon: "hubspot.com" },
 			{ name: "LinkedIn", icon: "linkedin.com" },
 		],
-		updatedAt: Date.now() - 86400000, // 1 day ago
+		lastRan: Date.now() - 1 * 24 * 60 * 60 * 1000, // 1 day ago
+		avgRunTime: 100 + Math.random() * 100,
+		healthTimeline: randomHealthTimeline(),
+		tags: ["sales", "management"]
 	},
 	{
 		id: "wf003",
 		title: "Employee Onboarding",
 		description: "Process for integrating new employees",
+		enabled: true,
 		services: [
 			{ name: "Workday", icon: "workday.com" },
 			{ name: "Google Workspace", icon: "google.com" },
 			{ name: "Asana", icon: "asana.com" },
 		],
-		updatedAt: Date.now() - 172800000, // 2 days ago
+		lastRan: Date.now() - 2 * 24 * 60 * 60 * 1000, // 2 days ago
+		avgRunTime: 100 + Math.random() * 100,
+		healthTimeline: randomHealthTimeline(),
+		tags: ["human-resources", "onboarding"]
 	},
 	{
 		id: "wf004",
 		title: "Content Marketing",
 		description: "Create and distribute marketing content",
+		enabled: true,
 		services: [
 			{ name: "WordPress", icon: "wordpress.org" },
 			{ name: "Canva", icon: "canva.com" },
 			{ name: "Hootsuite", icon: "hootsuite.com" },
 		],
-		updatedAt: Date.now() - 345600000, // 4 days ago
+		lastRan: Date.now() - 4 * 24 * 60 * 60 * 1000, // 4 days ago
+		avgRunTime: 100 + Math.random() * 100,
+		healthTimeline: randomHealthTimeline(),
+		tags: ["marketing", "content-creation"]
 	},
 	{
 		id: "wf005",
 		title: "IT Support Ticketing",
 		description: "Manage and resolve IT support requests",
+		enabled: true,
 		services: [
 			{ name: "Jira", icon: "atlassian.com" },
 			{ name: "Zendesk", icon: "zendesk.com" },
 			{ name: "Microsoft Teams", icon: "microsoft.com" },
 		],
-		updatedAt: Date.now() - 518400000, // 6 days ago
+		lastRan: Date.now() - 6 * 24 * 60 * 60 * 1000,
+		avgRunTime: 100 + Math.random() * 100,
+		healthTimeline: randomHealthTimeline(),
+		tags: ["it", "support"]
 	},
 	{
 		id: "wf006",
 		title: "Product Development",
 		description: "Coordinate product design and development",
+		enabled: true,
 		services: [
 			{ name: "GitHub", icon: "github.com" },
 			{ name: "Figma", icon: "figma.com" },
 			{ name: "Trello", icon: "trello.com" },
 		],
-		updatedAt: Date.now() - 691200000, // 8 days ago
-	},
-	{
-		id: "wf001",
-		title: "Customer Onboarding",
-		description: "Process for welcoming and setting up new customers",
-		services: [
-			{ name: "Gmail", icon: "gmail.com" },
-			{ name: "Slack", icon: "slack.com" },
-			{ name: "Zoom", icon: "zoom.us" },
-		],
-		updatedAt: Date.now(),
-	},
-	{
-		id: "wf002",
-		title: "Sales Pipeline Management",
-		description: "Track and manage sales opportunities",
-		services: [
-			{ name: "Salesforce", icon: "salesforce.com" },
-			{ name: "HubSpot", icon: "hubspot.com" },
-			{ name: "LinkedIn", icon: "linkedin.com" },
-		],
-		updatedAt: Date.now() - 86400000, // 1 day ago
-	},
-	{
-		id: "wf003",
-		title: "Employee Onboarding",
-		description: "Process for integrating new employees",
-		services: [
-			{ name: "Workday", icon: "workday.com" },
-			{ name: "Google Workspace", icon: "google.com" },
-			{ name: "Asana", icon: "asana.com" },
-		],
-		updatedAt: Date.now() - 172800000, // 2 days ago
-	},
-	{
-		id: "wf004",
-		title: "Content Marketing",
-		description: "Create and distribute marketing content",
-		services: [
-			{ name: "WordPress", icon: "wordpress.org" },
-			{ name: "Canva", icon: "canva.com" },
-			{ name: "Hootsuite", icon: "hootsuite.com" },
-		],
-		updatedAt: Date.now() - 345600000, // 4 days ago
-	},
-	{
-		id: "wf005",
-		title: "IT Support Ticketing",
-		description: "Manage and resolve IT support requests",
-		services: [
-			{ name: "Jira", icon: "atlassian.com" },
-			{ name: "Zendesk", icon: "zendesk.com" },
-			{ name: "Microsoft Teams", icon: "microsoft.com" },
-		],
-		updatedAt: Date.now() - 518400000, // 6 days ago
-	},
-	{
-		id: "wf006",
-		title: "Product Development",
-		description: "Coordinate product design and development",
-		services: [
-			{ name: "GitHub", icon: "github.com" },
-			{ name: "Figma", icon: "figma.com" },
-			{ name: "Trello", icon: "trello.com" },
-		],
-		updatedAt: Date.now() - 691200000, // 8 days ago
-	},
-	{
-		id: "wf001",
-		title: "Customer Onboarding",
-		description: "Process for welcoming and setting up new customers",
-		services: [
-			{ name: "Gmail", icon: "gmail.com" },
-			{ name: "Slack", icon: "slack.com" },
-			{ name: "Zoom", icon: "zoom.us" },
-		],
-		updatedAt: Date.now(),
-	},
-	{
-		id: "wf002",
-		title: "Sales Pipeline Management",
-		description: "Track and manage sales opportunities",
-		services: [
-			{ name: "Salesforce", icon: "salesforce.com" },
-			{ name: "HubSpot", icon: "hubspot.com" },
-			{ name: "LinkedIn", icon: "linkedin.com" },
-		],
-		updatedAt: Date.now() - 86400000, // 1 day ago
-	},
-	{
-		id: "wf003",
-		title: "Employee Onboarding",
-		description: "Process for integrating new employees",
-		services: [
-			{ name: "Workday", icon: "workday.com" },
-			{ name: "Google Workspace", icon: "google.com" },
-			{ name: "Asana", icon: "asana.com" },
-		],
-		updatedAt: Date.now() - 172800000, // 2 days ago
-	},
-	{
-		id: "wf004",
-		title: "Content Marketing",
-		description: "Create and distribute marketing content",
-		services: [
-			{ name: "WordPress", icon: "wordpress.org" },
-			{ name: "Canva", icon: "canva.com" },
-			{ name: "Hootsuite", icon: "hootsuite.com" },
-		],
-		updatedAt: Date.now() - 345600000, // 4 days ago
-	},
-	{
-		id: "wf005",
-		title: "IT Support Ticketing",
-		description: "Manage and resolve IT support requests",
-		services: [
-			{ name: "Jira", icon: "atlassian.com" },
-			{ name: "Zendesk", icon: "zendesk.com" },
-			{ name: "Microsoft Teams", icon: "microsoft.com" },
-		],
-		updatedAt: Date.now() - 518400000, // 6 days ago
-	},
-	{
-		id: "wf006",
-		title: "Product Development",
-		description: "Coordinate product design and development",
-		services: [
-			{ name: "GitHub", icon: "github.com" },
-			{ name: "Figma", icon: "figma.com" },
-			{ name: "Trello", icon: "trello.com" },
-		],
-		updatedAt: Date.now() - 691200000, // 8 days ago
+		lastRan: Date.now() - 8 * 24 * 60 * 60 * 1000,
+		avgRunTime: 100 + Math.random() * 100,
+		healthTimeline: randomHealthTimeline(),
+		tags: ["development", "product-design"]
 	},
 ];
 
-function SearchBar() {
+const renderHealthTimeline = (healthTimeline: ("healthy" | "warning" | "error" | "inactive")[]) => {
+	const baseClasses = "w-[6.5px] h-[6.5px] rounded-full"
+	const colorClasses = {
+		healthy: "bg-green-500",
+		warning: "bg-yellow-500",
+		error: "bg-red-500",
+		inactive: "bg-gray-500"
+	}
+
 	return (
-		<div className="relative flex-1 md:grow-0 w-full">
-			<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-			<Input
-				type="search"
-				placeholder="Search..."
-				className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-			/>
+		<div className="flex space-x-0.5">
+			{healthTimeline.map((status, i) => (
+				<div
+					key={i}
+					className={`${baseClasses} ${colorClasses[status]}`}
+				/>
+			))}
 		</div>
+	)
+}
+
+
+
+function NewTagDialog({ onAddTag }: { onAddTag: (tag: string) => void }) {
+	const [newTag, setNewTag] = useState('');
+	const [open, setOpen] = useState(false);
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (newTag.trim()) {
+			onAddTag(newTag.trim().toLowerCase());
+			setNewTag('');
+			setOpen(false);
+		}
+	};
+
+	return (
+		<Dialog open={open} onOpenChange={setOpen}>
+			<DialogTrigger asChild>
+
+				<Badge
+					variant="outline"
+					className="cursor-pointer border-dashed h-[22px] mt-[3px]"
+				>
+					<PlusIcon className="h-[8px] w-[8px] mr-1" />
+					Add Tag
+				</Badge>
+
+			</DialogTrigger>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>Create New Tag</DialogTitle>
+				</DialogHeader>
+				<form onSubmit={handleSubmit} className="space-y-4">
+					<Input
+						value={newTag}
+						onChange={(e) => setNewTag(e.target.value)}
+						placeholder="Enter tag name"
+						className="mt-2"
+					/>
+					<Button type="submit" className="w-full">Create Tag</Button>
+				</form>
+			</DialogContent>
+		</Dialog>
 	);
 }
 
 function Header() {
+	const [searchTerm, setSearchTerm] = useState('');
+	const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	const [customTags, setCustomTags] = useState<string[]>([]);
+	const [tagToDelete, setTagToDelete] = useState<string | null>(null);
+
+	const allTags = Array.from(new Set([
+		...customTags,
+	]));
+
+	const toggleTag = (tag: string) => {
+		setSelectedTags(prev =>
+			prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+		);
+	};
+
+	const handleAddTag = (newTag: string) => {
+		if (!allTags.includes(newTag)) {
+			setCustomTags(prev => [...prev, newTag]);
+		}
+	};
+
+	const handleRemoveTag = (tag: string) => {
+		setCustomTags(prev => prev.filter(t => t !== tag));
+		setSelectedTags(prev => prev.filter(t => t !== tag));
+		setTagToDelete(null);
+	};
+
 	return (
-		<div className="space-y-4 w-full xl:max-w-screen-md mx-auto">
-			<div>
+		<div className="space-y-6">
+			<motion.div
+				initial={{ opacity: 0, y: -10 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.3 }}
+			>
 				<h2>Workflows</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed</p>
+				<p className="text-sm text-muted-foreground mt-1">
+					Manage and monitor your automated processes
+				</p>
+			</motion.div>
+			<div className="space-y-4">
+				<motion.div
+					initial={{ opacity: 0, y: -10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.3, delay: 0.15 }}
+				>
+					<div className="flex flex-col sm:flex-row gap-2">
+						<div className="relative flex-1">
+							<Search className="absolute left-2.5 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+							<Input
+								type="search"
+								placeholder="Search workflows"
+								className="pl-9 py-1 text-sm w-full"
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+							/>
+						</div>
+						<Button className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
+							<PlusIcon className="mr-1 h-4 w-4" /> New
+						</Button>
+					</div>
+				</motion.div>
+				<motion.div
+					initial={{ opacity: 0, y: -10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.3, delay: 0.3 }}
+				>
+					<ScrollArea className="max-h-[60px]">
+						<div className="flex flex-wrap gap-1">
+							{allTags.map(tag => (
+								<ContextMenu key={tag}>
+									<ContextMenuTrigger>
+										<Badge
+											variant={selectedTags.includes(tag) ? "default" : "outline"}
+											className="cursor-pointer"
+											onClick={() => toggleTag(tag)}
+										>
+											{tag}
+										</Badge>
+									</ContextMenuTrigger>
+									<ContextMenuContent>
+										<ContextMenuItem
+											className="text-destructive focus:text-destructive"
+											onClick={() => setTagToDelete(tag)}
+										>
+											Delete Tag
+										</ContextMenuItem>
+									</ContextMenuContent>
+								</ContextMenu>
+							))}
+							<NewTagDialog onAddTag={handleAddTag} />
+						</div>
+					</ScrollArea>
+				</motion.div>
 			</div>
-			<div className="flex justify-between items-center w-full flex-col md:flex-row gap-2">
-				<SearchBar />
-				<Button className="w-full md:w-auto">
-					<PlusIcon className="w-4 h-4 mr-2" />
-					New Workflow
-				</Button>
-			</div>
+
+			<AlertDialog open={!!tagToDelete} onOpenChange={() => setTagToDelete(null)}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Delete Tag</AlertDialogTitle>
+						<AlertDialogDescription>
+							Are you sure you want to delete this tag? This will remove it from all workflows.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>Cancel</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => tagToDelete && handleRemoveTag(tagToDelete)}
+							className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+						>
+							Delete
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }
 
 type WorkflowCardProps = {
 	workflow: Workflow;
+	index: number;
 };
 
-function WorkflowCard({ workflow }: WorkflowCardProps) {
-	return (
-		<Card
-			className={cn(
-				"transition-all duration-200 flex flex-col justify-between",
-			)}
-		>
-			<CardHeader>
-				<Link to={`/workflows/${workflow.id}`} className="hover:underline">
-					<CardTitle>{workflow.title}</CardTitle>
-					<CardDescription>{workflow.description}</CardDescription>
-				</Link>
-			</CardHeader>
-			<CardContent className="flex justify-between items-end">
-				<div className="flex flex-wrap gap-[6px]">
-					{workflow.services.map((service) => (
-						<img
-							key={service.name}
-							className="w-5 h-5 rounded-sm"
-							src={`https://cdn.brandfetch.io/${service.icon}/w/400/h/400`}
-							alt={service.name}
-						/>
-					))}
-				</div>
-				<Label
-					onClick={(e) => e.stopPropagation()}
-					className="flex items-center gap-2 hover:cursor-pointer"
-				>
-					Enabled
-					<Switch />
-				</Label>
-			</CardContent>
-		</Card>
-	);
-}
-
-type Folder = {
-	id: string;
-	name: string;
-	order: number;
-	workflowCount: number;
-};
-
-type FolderCardProps = {
-	folder: Folder;
-	deleteFolder: (id: string) => void;
-	renameFolder: (id: string, newName: string) => void;
-};
-
-function FolderCard(props: FolderCardProps) {
-	const [isEditable, setIsEditable] = useState(false);
-	const cardTitleRef = useRef<HTMLDivElement>(null);
-	const { attributes, listeners, setNodeRef, transform, transition } =
-		useSortable({ id: props.folder.id });
-
-	const style = {
-		transform: CSS.Transform.toString(transform),
-		transition,
-	};
-
-	const handleDeleteFolder = () => {
-		if (props.folder.workflowCount > 0) {
-			toast.error("Folder cannot be deleted because it has workflows", {
-				richColors: true,
-			});
-			return;
-		}
-		props.deleteFolder(props.folder.id);
-	};
-
-	const handleRenameFolder = (newName: string) => {
-		setIsEditable(false);
-		props.renameFolder(props.folder.id, newName);
-	};
-
-	const handleEditName = () => {
-		setIsEditable(true);
-		setTimeout(() => {
-			if (cardTitleRef.current) {
-				cardTitleRef.current.focus();
-				const range = document.createRange();
-				const selection = window.getSelection();
-				if (!selection) return;
-				range.selectNodeContents(cardTitleRef.current);
-				range.collapse(false);
-				selection.removeAllRanges();
-				selection.addRange(range);
-			}
-		}, 50);
-	};
-
-	return (
-		<ContextMenu>
-			<ContextMenuTrigger>
-				<Card
-					ref={setNodeRef}
-					style={style}
-					className="hover:cursor-pointer group hover:border-blue-700 transition-colors duration-200 p-2 flex justify-between items-center"
-				>
-					<CardTitle
-						ref={cardTitleRef}
-						contentEditable={isEditable}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								e.preventDefault();
-								handleRenameFolder(e.currentTarget.textContent || "");
-							}
-						}}
-						onBlur={(e) =>
-							handleRenameFolder(e.currentTarget.textContent || "")
-						}
-						className={cn("text-sm w-full outline-none")}
-					>
-						{props.folder.name}
-					</CardTitle>
-					<GripVertical
-						{...attributes}
-						{...listeners}
-						className="hidden group-hover:block w-4 h-4 outline-none hover:cursor-grab active:cursor-grabbing text-muted-foreground"
-					/>
-				</Card>
-			</ContextMenuTrigger>
-			<ContextMenuContent>
-				<ContextMenuItem onClick={handleEditName}>
-					<Pencil1Icon className="w-4 h-4 mr-2 text-muted-foreground" />
-					Rename
-				</ContextMenuItem>
-				<ContextMenuItem onClick={handleDeleteFolder} className="text-red-500">
-					<TrashIcon className="w-4 h-4 mr-2" />
-					Delete
-				</ContextMenuItem>
-			</ContextMenuContent>
-		</ContextMenu>
-	);
-}
-
-const newFolderSchema = z.object({
-	name: z
-		.string()
-		.min(1, "Must be at least 1 character")
-		.max(20, "Name must be less than 20 characters"),
-});
-
-function NewFolderDialog(props: {
-	children: React.ReactNode;
-	onSubmit: (
-		data: z.infer<typeof newFolderSchema>,
-	) => Promise<string | undefined> | undefined;
+function ManageTagsDialog({
+	workflow,
+	allTags,
+	onUpdateTags,
+	open,
+	onOpenChange
+}: {
+	workflow: Workflow;
+	allTags: string[];
+	onUpdateTags: (workflowId: string, tags: string[]) => void;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
 }) {
-	const [open, setOpen] = useState(false);
-	const [error, setError] = useState<string | undefined>(undefined);
+	const [selectedTags, setSelectedTags] = useState<string[]>(workflow.tags);
 
-	const form = useForm<z.infer<typeof newFolderSchema>>({
-		resolver: zodResolver(newFolderSchema),
-		defaultValues: {
-			name: "",
-		},
-	});
+	const toggleTag = (tag: string) => {
+		setSelectedTags(prev =>
+			prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+		);
+	};
 
-	const handleSubmit = async (data: z.infer<typeof newFolderSchema>) => {
-		const error = await props.onSubmit(data);
-		if (error) {
-			setError(error);
-			return;
-		}
-		setOpen(false);
-		form.reset();
+	const handleSave = () => {
+		onUpdateTags(workflow.id, selectedTags);
+		onOpenChange(false);
 	};
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger>{props.children}</DialogTrigger>
+		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>New Folder</DialogTitle>
-					<DialogDescription>
-						Create a new folder to organize your workflows
-					</DialogDescription>
-				</DialogHeader>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSubmit)}>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Name</FormLabel>
-									<FormControl>
-										<Input {...field} />
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						{error && <FormMessage>{error}</FormMessage>}
-						<Button type="submit" className="w-full mt-4">
-							Create folder
-						</Button>
-					</form>
-				</Form>
+				<motion.div
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.2 }}
+				>
+					<DialogHeader>
+						<DialogTitle>Manage Tags</DialogTitle>
+					</DialogHeader>
+					<div className="flex flex-wrap gap-1 mt-4 whitespace-nowrap">
+						{allTags.map(tag => (
+							<Badge
+								key={tag}
+								variant={selectedTags.includes(tag) ? "default" : "outline"}
+								className="cursor-pointer"
+								onClick={() => toggleTag(tag)}
+							>
+								{tag}
+							</Badge>
+						))}
+					</div>
+					<Button onClick={handleSave} className="w-full mt-4">
+						Save Changes
+					</Button>
+				</motion.div>
 			</DialogContent>
 		</Dialog>
 	);
 }
 
-function FolderPanel() {
-	const sensors = useSensors(
-		useSensor(PointerSensor),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates,
-		}),
-	);
-	const [parent, enableAnimations] = useAutoAnimate(/* optional config */);
-	const [folders, setFolders] = useState<Folder[]>([
-		{
-			id: "folder002",
-			name: "Folder 2",
-			workflowCount: 8,
-			order: 2,
-		},
-		{
-			id: "folder001",
-			name: "Folder 1",
-			workflowCount: 2,
-			order: 1,
-		},
-		{
-			id: "folder003",
-			name: "Folder 1",
-			workflowCount: 0,
-			order: 3,
-		},
-	]);
+function WorkflowCard({ workflow, index }: WorkflowCardProps) {
+	const [manageTagsOpen, setManageTagsOpen] = useState(false);
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-	const handleDragEnd = (event: DragEndEvent) => {
-		enableAnimations(false);
-		const { active, over } = event;
-
-		if (active.id !== over?.id) {
-			setFolders((folders) => {
-				const oldIndex = folders.findIndex((folder) => folder.id === active.id);
-				const newIndex = folders.findIndex((folder) => folder.id === over?.id);
-				return arrayMove(folders, oldIndex, newIndex);
-			});
-		}
+	const handleUpdateTags = (workflowId: string, newTags: string[]) => {
+		console.log('Updating tags for workflow', workflowId, newTags);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-	useEffect(() => {
-		enableAnimations(true);
-	}, [folders.length, enableAnimations]);
-
-	const handleNewFolder = async (data: z.infer<typeof newFolderSchema>) => {
-		setFolders((folders) => [
-			{
-				id: crypto.randomUUID(),
-				name: data.name,
-				workflowCount: 0,
-				order: folders.length + 1,
-			},
-			...folders,
-		]);
-		return undefined;
+	const handleDelete = () => {
+		console.log('Deleting workflow', workflow.id);
+		setDeleteDialogOpen(false);
 	};
 
-	const handleDeleteFolder = (id: string) => {
-		setFolders((folders) => folders.filter((folder) => folder.id !== id));
-	};
-
-	const handleRenameFolder = (id: string, newName: string) => {
-		setFolders((folders) =>
-			folders.map((folder) =>
-				folder.id === id ? { ...folder, name: newName } : folder,
-			),
-		);
-	};
 	return (
-		<Card className="w-full xl:max-w-[360px] ml-auto">
-			<CardHeader className="flex-row justify-between">
-				<div>
-					<CardTitle>Folders</CardTitle>
-					<CardDescription className="max-w-xs text-wrap">
-						Organize your workflows
-					</CardDescription>
-				</div>
-				<NewFolderDialog onSubmit={handleNewFolder}>
-					<Button variant="outline" size="sm">
-						<PlusIcon className="w-4 h-4 mr-2" />
-						New Folder
-					</Button>
-				</NewFolderDialog>
-			</CardHeader>
-			<CardContent>
-				<DndContext
-					sensors={sensors}
-					collisionDetection={closestCenter}
-					onDragEnd={handleDragEnd}
-				>
-					<SortableContext
-						items={folders}
-						strategy={verticalListSortingStrategy}
-					>
-						<div ref={parent} className="flex flex-col gap-2">
-							{folders.map((folder) => (
-								<FolderCard
-									deleteFolder={handleDeleteFolder}
-									renameFolder={handleRenameFolder}
-									key={folder.id}
-									folder={folder}
-								/>
-							))}
-						</div>
-					</SortableContext>
-				</DndContext>
-			</CardContent>
-		</Card>
+		<motion.div
+			initial={{ opacity: 0, y: -10 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{
+				duration: 0.3,
+				delay: 0.45 + (index * 0.1),
+				ease: "easeOut"
+			}}
+		>
+			<motion.div
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				transition={{ duration: 0.3, delay: index * 0.1 + 0.2 }}
+			>
+				<ContextMenu>
+					<ContextMenuTrigger>
+						<Card className="overflow-hidden rounded-lg transition-colors duration-200 hover:border-primary/50">
+							<CardHeader className="flex flex-row items-center justify-between py-3 px-4">
+								<Link
+									to={`/workflows/${workflow.id}`}
+									className="flex-1"
+								>
+									<div className="space-y-1">
+										<CardTitle className="text-base font-medium">
+											{workflow.title}
+										</CardTitle>
+										<p className="text-xs text-muted-foreground">
+											{workflow.description}
+										</p>
+										<div className="flex items-center space-x-1 text-xs pt-1">
+											{workflow.tags.map(tag => (
+												<Badge key={tag} variant="secondary" className="px-1 py-0 text-[10px]">
+													{tag}
+												</Badge>
+											))}
+										</div>
+									</div>
+								</Link>
+								<Switch checked={workflow.enabled} className="ml-2" />
+							</CardHeader>
+							<CardContent className="bg-muted/30 py-2 px-4 flex items-center justify-between text-xs">
+								<div className="flex space-x-1">
+									{workflow.services.map((service) => (
+										<span key={service.name} className="bg-background rounded-full p-1">
+											<img
+												className="w-4 h-4 rounded-sm"
+												src={`https://cdn.brandfetch.io/${service.icon}/w/400/h/400`}
+												alt={service.name}
+											/>
+										</span>
+									))}
+								</div>
+								<div className="flex items-center space-x-3">
+									<span className="text-muted-foreground flex items-center">
+										{renderHealthTimeline(workflow.healthTimeline)}
+									</span>
+									<span className="text-muted-foreground flex items-center justify-end w-20">
+										<Activity className="h-3 w-3 mr-1" /> {dayjs(workflow.lastRan).fromNow()}
+									</span>
+									<span className="text-muted-foreground flex items-center justify-end w-[88px]">
+										<Clock className="h-3 w-3 mr-1" /> Avg: {Math.round(workflow.avgRunTime)} ms
+									</span>
+
+								</div>
+							</CardContent>
+						</Card>
+					</ContextMenuTrigger>
+					<ContextMenuContent>
+						<ContextMenuItem
+							onClick={() => setManageTagsOpen(true)}
+						>
+							Manage Tags
+						</ContextMenuItem>
+						<ContextMenuItem
+							className="text-destructive focus:text-destructive"
+							onClick={() => setDeleteDialogOpen(true)}
+						>
+							Delete Workflow
+						</ContextMenuItem>
+					</ContextMenuContent>
+
+					<ManageTagsDialog
+						workflow={workflow}
+						allTags={Array.from(new Set(workflows.flatMap(w => w.tags)))}
+						onUpdateTags={handleUpdateTags}
+						open={manageTagsOpen}
+						onOpenChange={setManageTagsOpen}
+					/>
+
+					<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Delete Workflow</AlertDialogTitle>
+								<AlertDialogDescription>
+									Are you sure you want to delete this workflow? This action cannot be undone.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Cancel</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={handleDelete}
+									className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+								>
+									Delete
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
+				</ContextMenu>
+			</motion.div>
+		</motion.div>
 	);
 }
 
 export function Component() {
+	const [searchTerm] = useState('');
+	const filteredWorkflows = workflows.filter(workflow =>
+		workflow.title.toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	return (
-		<section className="px-4 sm:px-6 lg:px-8 w-full mt-24  gap-4 flex flex-col">
+		<section className="px-4 sm:px-6 lg:px-8 w-full gap-4 flex flex-col pt-12 max-w-3xl mx-auto">
 			<Header />
-			<div className=" flex items-start flex-wrap gap-2 justify-start w-full">
-				<div className="w-full h-full flex-1 ">
-					<FolderPanel />
-				</div>
-				<ScrollArea
-					type="scroll"
-					className="h-[calc(100vh-400px)] xl:h-[calc(100vh-300px)] xl:max-w-screen-md w-full"
-				>
+			<ScrollArea className="h-[calc(100vh-325px)] relative -mr-3 pr-3">
+				<AnimatePresence mode="wait">
 					<div className="flex flex-col gap-2">
-						{workflows.map((workflow) => (
-							<WorkflowCard key={workflow.id} workflow={workflow} />
+						{filteredWorkflows.map((workflow, index) => (
+							<WorkflowCard
+								key={workflow.id}
+								workflow={workflow}
+								index={index}
+							/>
 						))}
 					</div>
-				</ScrollArea>
-				<div className="w-full bg-blue-300 flex-1" />
-			</div>
+				</AnimatePresence>
+			</ScrollArea>
 		</section>
 	);
 }

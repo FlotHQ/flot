@@ -26,15 +26,21 @@ import {
 	CarouselItem,
 	type CarouselApi,
 } from "~/components/ui/carousel";
+import { motion } from "framer-motion";
 
 
 function Header() {
 	return (
-		<header className="mb-8">
+		<motion.header
+			initial={{ opacity: 0, y: -10 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.3 }}
+			className="mb-8"
+		>
 			<h3>
 				Welcome back, <span className="font-bold">John Doe</span>
 			</h3>
-		</header>
+		</motion.header>
 	);
 }
 
@@ -660,27 +666,57 @@ export function Component() {
 	return (
 		<div className="space-y-4 pb-24">
 			<Header />
-			<div className="grid grid-cols-1 xl:grid-cols-6 gap-2">
+			<motion.div
+				initial={{ opacity: 0, y: -10 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.3, delay: 0.2 }}
+				className="grid grid-cols-1 xl:grid-cols-6 gap-2"
+			>
 				<div className="xl:col-span-4 space-y-2">
-					<div className="h-[240px]">
+					<motion.div
+						initial={{ opacity: 0, y: -10 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.3, delay: 0.3 }}
+						className="h-[240px]"
+					>
 						<ExecutionTrends />
-					</div>
-					<div className="h-[320px]">
+					</motion.div>
+					<motion.div
+						initial={{ opacity: 0, y: -10 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.3, delay: 0.4 }}
+						className="h-[320px]"
+					>
 						<RecentExecutions />
-					</div>
+					</motion.div>
 				</div>
 				<div className="xl:col-span-2 space-y-2">
-					<div className="h-[240px]">
+					<motion.div
+						initial={{ opacity: 0, y: -10 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.3, delay: 0.3 }}
+						className="h-[240px]"
+					>
 						<ExecutionStatus />
-					</div>
-					<div className="h-[320px]">
+					</motion.div>
+					<motion.div
+						initial={{ opacity: 0, y: -10 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.3, delay: 0.4 }}
+						className="h-[320px]"
+					>
 						<RecentWorkflowsPanel />
-					</div>
+					</motion.div>
 				</div>
-			</div>
-			<div className="h-[280px]">
+			</motion.div>
+			<motion.div
+				initial={{ opacity: 0, y: -10 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ duration: 0.3, delay: 0.5 }}
+				className="h-[280px]"
+			>
 				<TemplateCarousel />
-			</div>
+			</motion.div>
 		</div>
 	);
 }
