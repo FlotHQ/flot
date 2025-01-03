@@ -35,7 +35,6 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 RUN npm i -g pnpm@$PNPM_VERSION
-RUN npm i -g @biomejs/biome@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install github.com/mitranim/gow@latest
