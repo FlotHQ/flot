@@ -6,7 +6,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"biomejs.biome",
+				"esbenp.prettier-vscode",
 				"aaron-bond.better-comments",
 				"golang.go",
 				"christian-kohler.path-intellisense",
@@ -23,10 +23,11 @@
 	},
 	"remoteUser": "root",
 	"postAttachCommand": "/bin/bash .devcontainer/setup.sh",
+	"postCreateCommand": "git config --global core.editor 'code --wait' && chmod 600 /root/.ssh/* && ssh-keyscan github.com >> /root/.ssh/known_hosts",
 	"mounts": [
 		"source=profile,target=/root,type=volume",
 		"target=/root/.vscode-server,type=volume",
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
 		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
 	]
 }
