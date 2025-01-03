@@ -10,7 +10,6 @@ type Props = {
 };
 
 export function RelativeHandle(props: Props) {
-	console.log(props);
 	return (
 		<Handle
 			style={{

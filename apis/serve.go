@@ -103,7 +103,6 @@ func Serve(app core.App, config ServeConfig) (*http.Server, error) {
 			return baseCtx
 		},
 	}
-
 	if config.ShowStartBanner {
 		schema := "http"
 		addr := server.Addr

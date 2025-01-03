@@ -1,31 +1,33 @@
 {
-  "name": "Flot Development Environment",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "app",
-  "workspaceFolder": "/workspace",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "biomejs.biome",
-        "aaron-bond.better-comments",
-        "golang.go",
-        "christian-kohler.path-intellisense",
-        "YoavBls.pretty-ts-errors",
-        "peterj.proto",
-        "Supermaven.supermaven",
-        "bradlc.vscode-tailwindcss",
-      ]
-    }
-  },
-  "forwardPorts": [8008],
-  "hostRequirements": {
-    "cpus": 4,
-    "memory": "8gb"
-  },
-  "remoteUser": "root",
-  "postAttachCommand": "/bin/bash .devcontainer/setup.sh",
-  "mounts": [
+	"name": "Flot Development Environment",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "app",
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"esbenp.prettier-vscode",
+				"aaron-bond.better-comments",
+				"golang.go",
+				"christian-kohler.path-intellisense",
+				"YoavBls.pretty-ts-errors",
+				"peterj.proto",
+				"bradlc.vscode-tailwindcss"
+			]
+		}
+	},
+	"forwardPorts": [8008],
+	"hostRequirements": {
+		"cpus": 4,
+		"memory": "8gb"
+	},
+	"remoteUser": "root",
+	"postAttachCommand": "/bin/bash .devcontainer/setup.sh",
+	"postCreateCommand": "git config --global core.editor 'code --wait' && chmod 600 /root/.ssh/* && ssh-keyscan github.com >> /root/.ssh/known_hosts",
+	"mounts": [
 		"source=profile,target=/root,type=volume",
-		"target=/root/.vscode-server,type=volume"
-	],
+		"target=/root/.vscode-server,type=volume",
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+	]
 }

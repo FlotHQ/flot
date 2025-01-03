@@ -1,6 +1,10 @@
 package flot
 
 import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
 	"os"
 	"os/signal"
@@ -12,10 +16,14 @@ import (
 	"github.com/fatih/color"
 	"github.com/flothq/flot/cmd"
 	"github.com/flothq/flot/core"
-	"github.com/glebarez/sqlite"
+	"github.com/flothq/flot/internal/metrics"
 	"github.com/nats-io/nats-server/v2/server"
 	"github.com/nats-io/nats.go"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -42,9 +50,14 @@ type Config struct {
 	DefaultEncryptionKey string
 	NatsURL              string
 	Db                   *gorm.DB
+	Ctx                  context.Context
 }
 
 func New() *Flot {
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
 	baseDir, isUsingGoRun := inspectRuntime()
 	dataDir := filepath.Join(baseDir, "flot_data")
 
@@ -55,22 +68,54 @@ func New() *Flot {
 
 	ns, _ := server.NewServer(opts)
 
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, os.Interrupt)
+	go func() {
+		<-c
+		println("Gracefully shutting down...")
+		ns.Shutdown()
+		ns.WaitForShutdown()
+		println("Exiting...")
+		os.Exit(0)
+	}()
+
+	// ns.ConfigureLogger()
+
 	go ns.Start()
 
 	if !ns.ReadyForConnections(5 * time.Second) {
 		panic("not ready for connection")
 	}
 
-	db, err := gorm.Open(sqlite.Open(filepath.Join(dataDir, "data.db")), &gorm.Config{})
+	db, err := gorm.Open(sqlite.New(sqlite.Config{
+		DriverName: "libsql",
+		DSN:        "file:" + filepath.Join(dataDir, "flot.db?cache=shared&mode=rwc"),
+	}), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
+
+	fmt.Println("OpenTelemetry tracing and metrics initialized successfully.")
 
 	return NewWithConfig(Config{
 		DefaultDev: isUsingGoRun,
 		NatsURL:    ns.ClientURL(),
 		Db:         db,
+		Ctx:        ctx,
 	})
+}
+
+type NatsWriter struct {
+	nc      *nats.Conn
+	subject string
+}
+
+func (w NatsWriter) Write(p []byte) (n int, err error) {
+	err = w.nc.Publish(w.subject, p)
+	if err != nil {
+		return 0, err
+	}
+	return len(p), nil
 }
 
 func NewWithConfig(config Config) *Flot {
@@ -84,24 +129,32 @@ func NewWithConfig(config Config) *Flot {
 		panic(err)
 	}
 
-	flot := &Flot{
-		RootCmd: &cobra.Command{
-			Use:     filepath.Base(os.Args[0]),
-			Short:   "Flot CLI",
-			Version: Version,
-			FParseErrWhitelist: cobra.FParseErrWhitelist{
-				UnknownFlags: true,
-			},
-			CompletionOptions: cobra.CompletionOptions{
-				DisableDefaultCmd: true,
-			},
+	otelShutdown, err := metrics.SetupOTelSDK(config.Ctx, nc)
+	if err != nil {
+		panic(err)
+	}
+
+	defer func() {
+		err = errors.Join(err, otelShutdown(context.Background()))
+	}()
+
+	rootCmd := &cobra.Command{
+		Use:     filepath.Base(os.Args[0]),
+		Short:   "Flot CLI",
+		Version: Version,
+		FParseErrWhitelist: cobra.FParseErrWhitelist{
+			UnknownFlags: true,
 		},
+		CompletionOptions: cobra.CompletionOptions{
+			DisableDefaultCmd: true,
+		},
+	}
+	flot := &Flot{
+		RootCmd:           rootCmd,
 		devFlag:           config.DefaultDev,
 		dataDirFlag:       config.DefaultDataDir,
 		encryptionKeyFlag: config.DefaultEncryptionKey,
 	}
-
-	flot.RootCmd.SetErr(newErrWriter())
 
 	flot.appWrapper = &appWrapper{core.NewBaseApp(core.BaseAppConfig{
 		IsDev:         flot.devFlag,
@@ -109,13 +162,46 @@ func NewWithConfig(config Config) *Flot {
 		EncryptionEnv: flot.encryptionKeyFlag,
 		Nc:            nc,
 		Db:            config.Db,
+		Ctx:           config.Ctx,
 	})}
+
+	rootCmd.PersistentPreRun = func(cmd *cobra.Command, args []string) {
+
+		logLevel, err := zerolog.ParseLevel(cmd.Flag("log-level").Value.String())
+
+		if err != nil {
+			panic(fmt.Errorf("failed to parse log level: %w", err))
+		}
+
+		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+
+		zerolog.SetGlobalLevel(logLevel)
+
+		consoleWriter := zerolog.ConsoleWriter{Out: os.Stdout}
+		consoleWriter.TimeFormat = zerolog.TimeFormatUnix
+		consoleWriter.TimeLocation = time.FixedZone("UTC", 0)
+
+		consoleWriter.FormatTimestamp = func(i interface{}) string {
+			jsonNumber, _ := i.(json.Number)
+			num, _ := jsonNumber.Int64()
+			return time.Unix(num, 0).UTC().Format(time.RFC3339)
+		}
+
+		natsWriter := NatsWriter{nc: nc, subject: "logs"}
+		multi := zerolog.MultiLevelWriter(consoleWriter, natsWriter)
+
+		log.Logger = log.Output(multi)
+	}
 
 	return flot
 }
 
 func (f *Flot) Start() error {
 	f.RootCmd.AddCommand(cmd.NewServeCommand(f.appWrapper, true))
+	f.RootCmd.AddCommand(cmd.NewWorkerCommand(f.appWrapper, true))
+
+	f.RootCmd.PersistentFlags().String("log-level", "error", "Log level (eg. info,warn,error,fatal,panic)")
+
 	return f.Execute()
 }
 
