@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	
+
 	app := flot.New()
 
 	app.RootCmd.ParseFlags(os.Args[1:])
