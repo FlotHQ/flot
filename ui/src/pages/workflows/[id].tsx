@@ -50,11 +50,11 @@ export function Component() {
 	};
 
 	return (
-		<ReactFlowProvider>
+			<ReactFlowProvider>
 			<WorkflowCanvas
 				initialNodes={workflow.nodes}
 				initialEdges={workflow.edges}
 			/>
-		</ReactFlowProvider>
+			</ReactFlowProvider>
 	);
 }

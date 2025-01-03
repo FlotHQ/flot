@@ -11,7 +11,6 @@ import {
 import { Button } from "~/components/ui/button";
 import { ProjectSwitcher } from "./project-switcher";
 import { UserNav } from "./user-nav";
-import { useLayoutEffect, useState } from "react";
 import { PinLeftIcon } from "@radix-ui/react-icons";
 import { cn } from "~/lib/utils";
 import { StyledLink } from "~/components/ui/styled-link";
@@ -19,6 +18,7 @@ import { Label } from "~/components/ui/label";
 import { ExpandedLogo, Logo } from "~/components/logo";
 import { Toaster } from "~/components/ui/sonner";
 import { useLocalStorage } from "usehooks-ts";
+import { ScrollArea } from "~/components/ui/scroll-area";
 
 const links: LinkEntry[] = [
 	{ label: "Home", href: "/", icon: Home },
@@ -35,16 +35,29 @@ const links: LinkEntry[] = [
 ];
 
 export function Layout() {
+
+	const location = useLocation();
+
+
+
 	return (
 		<>
 			<Toaster />
-			<div className="flex relative h-screen w-full">
+			<div className="flex fixed inset-0">
 				<SideBar links={links} />
 				<div className="flex flex-col w-full">
 					<Header />
-					<div className="flex-grow bg-zinc-50 dark:bg-inherit">
-						<Outlet />
-					</div>
+					{/workflows\/.*/.test(location.pathname) ? (
+						<div className="bg-zinc-50 dark:bg-inherit h-full">
+							<Outlet />
+						</div>
+					) : (
+						<ScrollArea className="flex-grow">
+							<div className="bg-zinc-50 dark:bg-inherit h-full">
+								<Outlet />
+							</div>
+						</ScrollArea>
+					)}
 				</div>
 			</div>
 		</>
@@ -55,15 +68,17 @@ export function DashboardLayout() {
 	return (
 		<>
 			<Toaster />
-			<div className="flex relative h-screen w-full">
+			<div className="flex fixed inset-0">
 				<SideBar links={links} />
 				<div className="flex flex-col w-full">
 					<Header />
-					<div className="flex-grow bg-zinc-50 dark:bg-inherit ">
-						<div className="px-4 sm:px-6 lg:px-8 w-full mt-24  gap-4 flex flex-col max-w-screen-lg mx-auto">
-							<Outlet />
+					<ScrollArea className="flex-grow h-full max-h-screen overflow-y-auto">
+						<div className="bg-zinc-50 dark:bg-inherit min-h-full">
+							<div className="px-4 sm:px-6 lg:px-8 w-full py-24 gap-4 flex flex-col max-w-screen-lg mx-auto">
+								<Outlet />
+							</div>
 						</div>
-					</div>
+					</ScrollArea>
 				</div>
 			</div>
 		</>

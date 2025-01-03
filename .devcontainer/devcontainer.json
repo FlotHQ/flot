@@ -19,7 +19,7 @@
 	"forwardPorts": [8008],
 	"hostRequirements": {
 		"cpus": 4,
-		"memory": "8gb"
+		"memory": "16gb"
 	},
 	"remoteUser": "root",
 	"postAttachCommand": "/bin/bash .devcontainer/setup.sh",
