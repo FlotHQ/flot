@@ -13,12 +13,12 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/
 import { ScrollArea } from "~/components/ui/scroll-area";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon, ExternalLinkIcon } from "@radix-ui/react-icons";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card";
 import { Link } from "react-router-dom";
 import { cn } from "~/lib/utils";
-import { toast  } from "sonner";
+import { toast } from "sonner";
 import { Badge } from "~/components/ui/badge";
 import {
 	Carousel,
@@ -339,7 +339,7 @@ function ExecutionItem({ execution }: { execution: Execution }) {
 	const navigate = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
 
-	const canRetry = (execution.status === 'error' || execution.status === 'timeout') && 
+	const canRetry = (execution.status === 'error' || execution.status === 'timeout') &&
 		(!execution.retries || execution.retries.count < execution.retries.max);
 
 	const handleRetry = () => {
@@ -348,7 +348,7 @@ function ExecutionItem({ execution }: { execution: Execution }) {
 
 	return (
 		<div className="flex flex-col border-b pb-4 last:border-0">
-			<div 
+			<div
 				className="flex items-center justify-between cursor-pointer"
 				onClick={() => setIsExpanded(!isExpanded)}
 			>
@@ -366,12 +366,11 @@ function ExecutionItem({ execution }: { execution: Execution }) {
 					</div>
 				</div>
 				<div className="flex items-center gap-2">
-					<div 
-						className={`h-2 w-2 rounded-full ${
-							execution.status === 'success' ? 'bg-green-500' :
+					<div
+						className={`h-2 w-2 rounded-full ${execution.status === 'success' ? 'bg-green-500' :
 							execution.status === 'error' ? 'bg-red-500' :
-							'bg-orange-500'
-						}`} 
+								'bg-orange-500'
+							}`}
 					/>
 					<span className="text-xs text-muted-foreground capitalize">
 						{execution.status}
@@ -417,17 +416,17 @@ function ExecutionItem({ execution }: { execution: Execution }) {
 					)}
 
 					<div className="flex justify-end gap-2">
-							<Button
-								variant="outline"
-								size="sm"
-								className="text-xs h-7"
-								disabled={!canRetry}
-								onClick={handleRetry}
-							>
-								{canRetry ? "Retry Execution" : (execution.status === 'error' || execution.status === 'timeout') ? "Maximum retry attempts reached" : "Retry Execution"}
-								
-							</Button>
-				
+						<Button
+							variant="outline"
+							size="sm"
+							className="text-xs h-7"
+							disabled={!canRetry}
+							onClick={handleRetry}
+						>
+							{canRetry ? "Retry Execution" : (execution.status === 'error' || execution.status === 'timeout') ? "Maximum retry attempts reached" : "Retry Execution"}
+
+						</Button>
+
 						<Button
 							variant="outline"
 							size="sm"
@@ -501,7 +500,6 @@ function RecentExecutions() {
 	);
 }
 
-// Add recent workflows data
 const recentWorkflows = [
 	{
 		id: "wf001",
@@ -582,17 +580,17 @@ function TemplateCarousel() {
 						</p>
 					</div>
 					<div className="flex gap-2 ml-4">
-						<Button 
-							variant="outline" 
-							size="sm" 
+						<Button
+							variant="outline"
+							size="sm"
 							className="h-8 w-8 p-0"
 							onClick={() => api?.scrollPrev()}
 						>
 							<ChevronLeftIcon className="h-4 w-4" />
 						</Button>
-						<Button 
-							variant="outline" 
-							size="sm" 
+						<Button
+							variant="outline"
+							size="sm"
 							className="h-8 w-8 p-0"
 							onClick={() => api?.scrollNext()}
 						>
@@ -662,8 +660,8 @@ export function Component() {
 	return (
 		<div className="space-y-4 pb-24">
 			<Header />
-			<div className="grid grid-cols-1 xl:grid-cols-4 gap-2">
-				<div className="xl:col-span-3 space-y-2">
+			<div className="grid grid-cols-1 xl:grid-cols-6 gap-2">
+				<div className="xl:col-span-4 space-y-2">
 					<div className="h-[240px]">
 						<ExecutionTrends />
 					</div>
@@ -671,7 +669,7 @@ export function Component() {
 						<RecentExecutions />
 					</div>
 				</div>
-				<div className="xl:col-span-1 space-y-2">
+				<div className="xl:col-span-2 space-y-2">
 					<div className="h-[240px]">
 						<ExecutionStatus />
 					</div>
