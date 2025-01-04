@@ -72,7 +72,6 @@ func handleWorkflowStarted(e *models.WorkflowEvent, msg emitter.Msg, we *Workflo
 		we.emitter.Emit(fmt.Sprintf("project.%s.workflow.%s.task.%s", m.ProjectId, e.WorkflowId, event.TaskId), bytes)
 	}
 
-	//TODO: execute the workflow
 	msg.Ack()
 }
 

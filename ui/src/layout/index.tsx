@@ -50,7 +50,7 @@ export function DashboardLayout() {
               <Separator orientation="vertical" className="mr-2 h-4" />
             </div>
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0 ">
+          <div className="flex flex-1 flex-col gap-4 p-4 pr-0 pt-0 ">
             <ScrollArea className="flex-grow max-h-screen h-[calc(100vh-160px)]  overflow-y-auto">
               <div className="bg-zinc-50 dark:bg-inherit min-h-full ">
                 <div className="px-4  sm:px-6 lg:px-8 w-full gap-4 flex flex-col max-w-screen-lg mx-auto pt-12 ">

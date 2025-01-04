@@ -96,7 +96,7 @@ func Serve(app core.App, config ServeConfig) (*http.Server, error) {
 		},
 		ReadTimeout:       10 * time.Minute,
 		ReadHeaderTimeout: 30 * time.Second,
-		// WriteTimeout: 60 * time.Second, // breaks sse!
+
 		Handler: router,
 		Addr:    mainAddr,
 		BaseContext: func(l net.Listener) context.Context {
@@ -127,7 +127,7 @@ func Serve(app core.App, config ServeConfig) (*http.Server, error) {
 
 		regular := color.New()
 		regular.Printf("├─ REST API: %s\n", color.CyanString("%s://%s/api/", schema, addr))
-		// regular.Printf("└─ Admin UI: %s\n", color.CyanString("%s://%s/_/", schema, addr))
+
 	}
 
 	return server, server.ListenAndServe()

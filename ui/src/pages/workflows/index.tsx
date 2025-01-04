@@ -24,6 +24,9 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { useUrlParams } from "~/hooks/useUrlParams/useUrlParams";
 import { UrlParamsProvider } from "~/hooks/useUrlParams";
+import { logger } from "~/lib/logger";
+
+const log = logger.child({ module: "workflows" });
 
 dayjs.extend(relativeTime);
 
@@ -219,8 +222,6 @@ function Header() {
   }, [deferredSearchTerm, setParams]);
 
   useEffect(() => {
-    console.log("selectedTags", selectedTags, tags);
-
     setParams({ tags: selectedTags });
   }, [selectedTags, tags, setParams]);
 
@@ -261,6 +262,7 @@ function Header() {
                 type="search"
                 placeholder="Search workflows"
                 className="pl-9 py-1 text-sm w-full"
+                autoFocus
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -502,6 +504,11 @@ function WorkflowCard({ workflow, index }: WorkflowCardProps) {
 
 function WorkflowList() {
   const { search } = useUrlParams<{ search: string; tags: string[] }>();
+  const deferredSearch = useDeferredValue(search);
+
+  useEffect(() => {
+    log.child({ search: deferredSearch }).info("search");
+  }, [deferredSearch]);
 
   const filteredWorkflows = workflows.filter((workflow) => workflow.title.toLowerCase().includes(search.toLowerCase()));
 

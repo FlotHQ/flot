@@ -20,10 +20,9 @@ func main() {
 	}
 }
 
-// the default pb_public dir location is relative to the executable
 func defaultPublicDir() string {
 	if strings.HasPrefix(os.Args[0], os.TempDir()) {
-		// most likely ran with go run
+
 		return "./pb_public"
 	}
 

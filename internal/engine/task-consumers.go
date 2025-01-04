@@ -43,8 +43,6 @@ func RegisterTaskConsumers(we *WorkflowEngine) error {
 func handleTaskStarted(e *models.TaskEvent, msg emitter.Msg, we *WorkflowEngine) {
 	println("task started", e.ExecutionId)
 
-	//TODO: make a request/reply to the required task service
-
 	manifest, err := we.GetManifest(e.WorkflowId)
 	if err != nil {
 		msg.Nak()
@@ -60,9 +58,9 @@ func handleTaskStarted(e *models.TaskEvent, msg emitter.Msg, we *WorkflowEngine)
 
 	switch taskDefinition.TaskType {
 	case models.TaskType_TASK_TYPE_INPUT:
-		//TODO evaluate the output and store into the stae
+
 	case models.TaskType_TASK_TYPE_DELAY:
-		//TODO figure out how to implement this
+
 	default:
 		subject := fmt.Sprintf("tasks.%s.%s", taskDefinition.TaskType.String(), taskDefinition.TaskIdentifier)
 
@@ -199,7 +197,7 @@ func handleTaskCompleted(e *models.TaskEvent, msg emitter.Msg, we *WorkflowEngin
 	}
 
 	if len(nextTasks) == 0 && len(executionState.TaskExecutionStates) == len(manifest.States) {
-		// todo fix
+
 		completed := &models.WorkflowEvent{
 			Type:        models.WorkflowEventType_WORKFLOW_EVENT_TYPE_COMPLETED,
 			ExecutionId: e.ExecutionId,

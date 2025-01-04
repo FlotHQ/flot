@@ -79,8 +79,6 @@ func New() *Flot {
 		os.Exit(0)
 	}()
 
-	// ns.ConfigureLogger()
-
 	go ns.Start()
 
 	if !ns.ReadyForConnections(5 * time.Second) {
@@ -209,7 +207,6 @@ func (f *Flot) Execute() (err error) {
 
 	done := make(chan bool, 1)
 
-	// listen for interrupt signal to gracefully shutdown the application
 	go func() {
 		sigch := make(chan os.Signal, 1)
 		signal.Notify(sigch, os.Interrupt, syscall.SIGTERM)
@@ -218,9 +215,8 @@ func (f *Flot) Execute() (err error) {
 		done <- true
 	}()
 
-	// execute the root command
 	go func() {
-		// note: leave to the commands to decide whether to print their error
+
 		f.RootCmd.Execute()
 
 		done <- true
@@ -233,11 +229,11 @@ func (f *Flot) Execute() (err error) {
 
 func inspectRuntime() (baseDir string, withGoRun bool) {
 	if strings.HasPrefix(os.Args[0], os.TempDir()) {
-		// probably ran with go run
+
 		withGoRun = true
 		baseDir, _ = os.Getwd()
 	} else {
-		// probably ran with go build
+
 		withGoRun = false
 		baseDir = filepath.Dir(os.Args[0])
 	}

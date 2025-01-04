@@ -27,7 +27,6 @@ function Header() {
   );
 }
 
-// Chart configuration
 const chartConfig = {
   executions: {
     label: "Executions",
@@ -51,7 +50,6 @@ const chartConfig = {
   },
 };
 
-// Fake data for execution trends (last 7 days)
 const executionTrendData = [
   { date: "Mon", executions: 145 },
   { date: "Tue", executions: 232 },
@@ -62,14 +60,12 @@ const executionTrendData = [
   { date: "Sun", executions: 167 },
 ];
 
-// Fake data for execution status
 const executionStatusData = [
   { name: "Successful", value: 845, fill: "var(--color-successful)" },
   { name: "Failed", value: 124, fill: "var(--color-failed)" },
   { name: "Timeout", value: 42, fill: "var(--color-timeout)" },
 ];
 
-// Add some fake execution data
 const recentExecutions: Execution[] = [
   {
     id: 1,
@@ -142,13 +138,10 @@ const recentExecutions: Execution[] = [
   },
 ];
 
-// Add type for status
 type ExecutionStatus = "success" | "error" | "timeout";
 
-// Add type for filter
 type StatusFilter = ExecutionStatus | "all";
 
-// Extend the execution type with more details
 type Execution = {
   id: number;
   workflowId: string;
@@ -166,7 +159,6 @@ type Execution = {
   };
 };
 
-// Add template data type and sample data
 type Template = {
   id: string;
   title: string;

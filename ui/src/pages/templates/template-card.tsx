@@ -1,73 +1,70 @@
+import { Link } from "react-router-dom";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
-
-type Template = {
-  name: string;
-  description: string;
-  services: {
-    name: string;
-    icon: (props: { className: string }) => React.ReactNode;
-  }[];
-};
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
+import { Template } from "~/types";
 
 type TemplateCardProps = {
   template: Template;
-  onClick?: () => void;
-  isLoading?: boolean;
-  href?: string;
-  size: "sm" | "base";
 };
 
-const TemplateCard = (props: TemplateCardProps) => {
+const TemplateCard = ({ template }: TemplateCardProps) => {
   return (
-    <div
-      className={cn(
-        "p-3 relative flex-col flex border-[1px] border-muted w-80 transition-all duration-150 h-[124px] rounded-[4px]",
-        props.size === "sm" ? "w-72" : "w-80"
-      )}
-    >
-      <div className={cn(props.isLoading && "pointer-events-none")}>
-        <h6 className="text-sm font-semibold line-clamp-1">{props.template.name}</h6>
-        <p className="text-xs mt-1 text-muted-foreground line-clamp-2">{props.template.description}</p>
-      </div>
-
-      <div className="mt-auto flex justify-between items-center">
-        <div className={cn("flex gap-2", props.isLoading && "pointer-events-none")}>
-          {props.template.services.map((service) => (
-            <service.icon key={service.name} className="h-5 w-5" />
+    <Card className="transition-all w-full duration-200 hover:border-primary/20 flex flex-col">
+      <CardHeader className="flex-none pb-3">
+        <div className="space-y-1">
+          <CardTitle className="text-sm line-clamp-1">{template.title}</CardTitle>
+          <CardDescription className="text-xs line-clamp-2">{template.description}</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1 space-y-3 pb-5">
+        {template.categories.map((category) => (
+          <Badge variant="secondary" className="text-xs ml">
+            {category}
+          </Badge>
+        ))}
+      </CardContent>
+      <CardFooter className="flex-none flex justify-between items-center">
+        <div className="flex gap-2 ">
+          {template.services.map((service) => (
+            <img
+              key={service.name}
+              src={`https://cdn.brandfetch.io/${service.icon}/w/400/h/400`}
+              alt={service.name}
+              title={service.name}
+              className="w-5 h-5 rounded-md"
+            />
           ))}
         </div>
-        <Button
-          className="rounded-[4px]"
-          isLoading={props.isLoading}
-          onClick={props.onClick}
-          size="sm"
-          variant="secondary"
-        >
-          Use Template
-        </Button>
-      </div>
-    </div>
+        <Link to={`/templates/${template.id}`}>
+          <Button variant="outline" size="sm">
+            Use Template
+          </Button>
+        </Link>
+      </CardFooter>
+    </Card>
   );
 };
 
-type TemplateCardSkeletonProps = {
-  size: "sm" | "base";
-};
-
-TemplateCard.Skeleton = (props: TemplateCardSkeletonProps) => {
+TemplateCard.Skeleton = () => {
   return (
-    <div
-      className={cn(
-        "p-3 relative flex-col flex border-[1px] transition-all duration-150  h-[124px] rounded-[4px] border-muted",
-        props.size === "sm" ? "w-72" : "w-80"
-      )}
-    >
-      <div className="animate-pulse">
-        <h6 className="bg-foreground/10 h-[20px] w-[80%] rounded-md"></h6>
-        <p className="bg-foreground/10 h-[16px] w-[60%] rounded-md mt-1"></p>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <div>
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-3 w-48 mt-2" />
+        </div>
+      </CardHeader>
+      <CardFooter className="mt-auto flex justify-between items-center">
+        <div className="flex gap-2">
+          <Skeleton className="h-5 w-5 rounded-md" />
+          <Skeleton className="h-5 w-5 rounded-md" />
+          <Skeleton className="h-5 w-5 rounded-md" />
+        </div>
+        <Skeleton className="h-8 w-24 rounded-[4px]" />
+      </CardFooter>
+    </Card>
   );
 };
 

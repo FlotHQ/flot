@@ -13,27 +13,25 @@ import { GroupField } from "./group";
 import { QueryField } from "./query/query-field";
 
 const fields = {
-	text: TextField,
-	number: NumberField,
-	select: SelectField,
-	file: FileField,
-	date: DateField,
-	datetime: DateTimeField,
-	time: TimeField,
-	boolean: SwitchField,
-	textarea: TextAreaField,
-	group: GroupField,
-	query: QueryField,
+  text: TextField,
+  number: NumberField,
+  select: SelectField,
+  file: FileField,
+  date: DateField,
+  datetime: DateTimeField,
+  time: TimeField,
+  boolean: SwitchField,
+  textarea: TextAreaField,
+  group: GroupField,
+  query: QueryField,
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export function Field(props: BaseFieldProps<any>) {
-	const FieldComponent = fields[props.type as keyof typeof fields];
+  const FieldComponent = fields[props.type as keyof typeof fields];
 
-	if (!FieldComponent) {
-		return <p>Unknown field type</p>;
-	}
+  if (!FieldComponent) {
+    return <p>Unknown field type</p>;
+  }
 
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	return <FieldComponent {...(props as any)} />;
+  return <FieldComponent {...(props as any)} />;
 }

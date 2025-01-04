@@ -21,7 +21,7 @@ export function useUrlParams<T extends ParamValues>(): {
     const params = new Proxy({} as T, {
         get(_, prop: string) {
             if (prop === 'setParams') return context.setParams;
-            //@ts-expect-error Proxy
+
             if (prop === Symbol.toStringTag) return undefined;
 
             accessedKeysRef.current.add(prop as keyof T);

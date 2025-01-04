@@ -15,22 +15,18 @@ func setup() *nats.Conn {
 		JetStream: true,
 	}
 
-	// Initialize new server with options
 	ns, err := server.NewServer(opts)
 
 	if err != nil {
 		panic(err)
 	}
 
-	// Start the server via goroutine
 	go ns.Start()
 
-	// Wait for server to be ready for connections
 	if !ns.ReadyForConnections(4 * time.Second) {
 		panic("not ready for connection")
 	}
 
-	// Connect to server
 	nc, err := nats.Connect(ns.ClientURL())
 
 	if err != nil {

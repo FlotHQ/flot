@@ -1,0 +1,254 @@
+{
+  "templates": [
+    {
+      "id": "t001",
+      "title": "GitHub Notifications to Discord",
+      "description": "Send GitHub repository notifications to a Discord channel. Get alerts for new issues, PRs, and releases.",
+      "categories": ["Developer Tools"],
+      "popularity": 2847,
+      "services": [
+        { "name": "GitHub", "icon": "github.com" },
+        { "name": "Discord", "icon": "discord.com" }
+      ]
+    },
+    {
+      "id": "t002",
+      "title": "Slack JIRA Integration",
+      "description": "Keep your team in sync by sending JIRA updates to Slack channels. Track issue status changes and new assignments.",
+      "categories": ["Team Collaboration"],
+      "popularity": 2451,
+      "services": [
+        { "name": "Slack", "icon": "slack.com" },
+        { "name": "Jira", "icon": "atlassian.com" }
+      ]
+    },
+    {
+      "id": "t003",
+      "title": "Stripe Invoices to Notion",
+      "description": "Automatically log Stripe invoices in a Notion database for better financial tracking and reporting.",
+      "categories": ["Finance"],
+      "popularity": 1832,
+      "services": [
+        { "name": "Stripe", "icon": "stripe.com" },
+        { "name": "Notion", "icon": "notion.so" }
+      ]
+    },
+    {
+      "id": "t004",
+      "title": "Google Workspace Automation",
+      "description": "Automate document creation, sharing, and management across Google Workspace applications.",
+      "categories": ["Productivity"],
+      "popularity": 1654,
+      "services": [
+        { "name": "Google Drive", "icon": "google.com" },
+        { "name": "Google Sheets", "icon": "sheets.google.com" },
+        { "name": "Google Docs", "icon": "docs.google.com" }
+      ]
+    },
+    {
+      "id": "t005",
+      "title": "Multi-Cloud Backup Solution",
+      "description": "Secure and redundant backup workflow with support for multiple cloud providers and encryption.",
+      "categories": ["Data Management"],
+      "popularity": 1423,
+      "services": [
+        { "name": "AWS S3", "icon": "aws.amazon.com" },
+        { "name": "Google Cloud", "icon": "cloud.google.com" },
+        { "name": "Azure", "icon": "azure.microsoft.com" }
+      ]
+    },
+    {
+      "id": "t006",
+      "title": "Sales Pipeline Automation",
+      "description": "Streamline your sales process by connecting CRM activities with team communication tools.",
+      "categories": ["Sales"],
+      "popularity": 1298,
+      "services": [
+        { "name": "Salesforce", "icon": "salesforce.com" },
+        { "name": "Slack", "icon": "slack.com" },
+        { "name": "Gmail", "icon": "gmail.com" }
+      ]
+    },
+    {
+      "id": "t007",
+      "title": "Social Media Analytics",
+      "description": "Track and analyze social media performance across multiple platforms with automated reporting.",
+      "categories": ["Marketing"],
+      "popularity": 1187,
+      "services": [
+        { "name": "Buffer", "icon": "buffer.com" },
+        { "name": "Twitter", "icon": "twitter.com" },
+        { "name": "LinkedIn", "icon": "linkedin.com" }
+      ]
+    },
+    {
+      "id": "t008",
+      "title": "Customer Support Workflow",
+      "description": "Automate ticket routing and response handling with integrated SLA monitoring.",
+      "categories": ["Customer Support"],
+      "popularity": 1076,
+      "services": [
+        { "name": "Zendesk", "icon": "zendesk.com" },
+        { "name": "Slack", "icon": "slack.com" },
+        { "name": "Intercom", "icon": "intercom.com" }
+      ]
+    },
+    {
+      "id": "t009",
+      "title": "Email Marketing Automation",
+      "description": "Automate email campaigns based on user behavior and engagement metrics.",
+      "categories": ["Marketing"],
+      "popularity": 987,
+      "services": [
+        { "name": "Mailchimp", "icon": "mailchimp.com" },
+        { "name": "HubSpot", "icon": "hubspot.com" }
+      ]
+    },
+    {
+      "id": "t010",
+      "title": "Project Time Tracking",
+      "description": "Automatically track time spent on projects and sync with billing systems.",
+      "categories": ["Productivity"],
+      "popularity": 934,
+      "services": [
+        { "name": "Toggl", "icon": "toggl.com" },
+        { "name": "Asana", "icon": "asana.com" },
+        { "name": "QuickBooks", "icon": "quickbooks.com" }
+      ]
+    },
+    {
+      "id": "t011",
+      "title": "Code Quality Monitor",
+      "description": "Monitor code quality metrics and get alerts for critical issues.",
+      "categories": ["Developer Tools"],
+      "popularity": 876,
+      "services": [
+        { "name": "SonarQube", "icon": "sonarqube.org" },
+        { "name": "GitHub", "icon": "github.com" },
+        { "name": "Jenkins", "icon": "jenkins.io" }
+      ]
+    },
+    {
+      "id": "t012",
+      "title": "HR Onboarding Flow",
+      "description": "Streamline new employee onboarding with automated document handling and access management.",
+      "categories": ["Team Collaboration"],
+      "popularity": 823,
+      "services": [
+        { "name": "Workday", "icon": "workday.com" },
+        { "name": "DocuSign", "icon": "docusign.com" },
+        { "name": "Google Workspace", "icon": "workspace.google.com" }
+      ]
+    },
+    {
+      "id": "t013",
+      "title": "Inventory Management",
+      "description": "Real-time inventory tracking with automated reordering and notifications.",
+      "categories": ["Data Management"],
+      "popularity": 789,
+      "services": [
+        { "name": "Shopify", "icon": "shopify.com" },
+        { "name": "QuickBooks", "icon": "quickbooks.com" },
+        { "name": "Slack", "icon": "slack.com" }
+      ]
+    },
+    {
+      "id": "t014",
+      "title": "Lead Generation Pipeline",
+      "description": "Capture and qualify leads automatically from multiple sources.",
+      "categories": ["Sales"],
+      "popularity": 745,
+      "services": [
+        { "name": "LinkedIn", "icon": "linkedin.com" },
+        { "name": "HubSpot", "icon": "hubspot.com" },
+        { "name": "Salesforce", "icon": "salesforce.com" }
+      ]
+    },
+    {
+      "id": "t015",
+      "title": "Expense Tracking",
+      "description": "Automated expense reporting and approval workflow.",
+      "categories": ["Finance"],
+      "popularity": 698,
+      "services": [
+        { "name": "Expensify", "icon": "expensify.com" },
+        { "name": "Xero", "icon": "xero.com" },
+        { "name": "Slack", "icon": "slack.com" }
+      ]
+    },
+    {
+      "id": "t016",
+      "title": "Customer Feedback Analysis",
+      "description": "Collect and analyze customer feedback from multiple channels.",
+      "categories": ["Customer Support"],
+      "popularity": 654,
+      "services": [
+        { "name": "Typeform", "icon": "typeform.com" },
+        { "name": "Google Sheets", "icon": "sheets.google.com" },
+        { "name": "Tableau", "icon": "tableau.com" }
+      ]
+    },
+    {
+      "id": "t017",
+      "title": "Content Publishing Workflow",
+      "description": "Streamline content creation and publishing across multiple platforms.",
+      "categories": ["Marketing"],
+      "popularity": 612,
+      "services": [
+        { "name": "WordPress", "icon": "wordpress.org" },
+        { "name": "Buffer", "icon": "buffer.com" },
+        { "name": "Canva", "icon": "canva.com" }
+      ]
+    },
+    {
+      "id": "t018",
+      "title": "Server Health Monitoring",
+      "description": "Monitor server performance and get alerts for potential issues.",
+      "categories": ["Developer Tools"],
+      "popularity": 587,
+      "services": [
+        { "name": "Datadog", "icon": "datadoghq.com" },
+        { "name": "PagerDuty", "icon": "pagerduty.com" },
+        { "name": "Slack", "icon": "slack.com" }
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "all",
+      "label": "All"
+    },
+    {
+      "id": "developer-tools",
+      "label": "Developer Tools"
+    },
+    {
+      "id": "team-collaboration",
+      "label": "Team Collaboration"
+    },
+    {
+      "id": "finance",
+      "label": "Finance"
+    },
+    {
+      "id": "productivity",
+      "label": "Productivity"
+    },
+    {
+      "id": "data-management",
+      "label": "Data Management"
+    },
+    {
+      "id": "sales",
+      "label": "Sales"
+    },
+    {
+      "id": "marketing",
+      "label": "Marketing"
+    },
+    {
+      "id": "customer-support",
+      "label": "Customer Support"
+    }
+  ]
+}
