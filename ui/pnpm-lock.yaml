@@ -36,7 +36,7 @@ importers:
         specifier: ^1.1.0
         version: 1.1.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-checkbox':
-        specifier: ^1.0.4
+        specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-collapsible':
         specifier: ^1.1.0
@@ -66,7 +66,7 @@ importers:
         specifier: ^1.0.3
         version: 1.1.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-radio-group':
-        specifier: ^1.1.3
+        specifier: ^1.2.2
         version: 1.2.2(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-scroll-area':
         specifier: ^1.1.0
@@ -92,9 +92,15 @@ importers:
       '@tailwindcss/container-queries':
         specifier: ^0.1.1
         version: 0.1.1(tailwindcss@3.4.17)
+      '@tanstack/query-sync-storage-persister':
+        specifier: ^5.62.12
+        version: 5.62.12
       '@tanstack/react-query':
-        specifier: '4'
-        version: 4.36.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: 5.62.14
+        version: 5.62.14(react@18.3.1)
+      '@tanstack/react-query-persist-client':
+        specifier: ^5.62.14
+        version: 5.62.14(@tanstack/react-query@5.62.14(react@18.3.1))(react@18.3.1)
       '@tanstack/react-table':
         specifier: ^8.12.0
         version: 8.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -149,15 +155,18 @@ importers:
       flexsearch:
         specifier: ^0.7.43
         version: 0.7.43
-      framer-motion:
-        specifier: ^11.0.5
-        version: 11.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      idb-keyval:
+        specifier: ^6.2.1
+        version: 6.2.1
       immer:
         specifier: ^10.1.1
         version: 10.1.1
       lucide-react:
         specifier: ^0.330.0
         version: 0.330.0(react@18.3.1)
+      motion:
+        specifier: ^11.15.0
+        version: 11.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       nanoid:
         specifier: ^5.0.7
         version: 5.0.9
@@ -1471,20 +1480,25 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.2.0'
 
-  '@tanstack/query-core@4.36.1':
-    resolution: {integrity: sha512-DJSilV5+ytBP1FbFcEJovv4rnnm/CokuVvrBEtW/Va9DvuJ3HksbXUJEpI0aV1KtuL4ZoO9AVE6PyNLzF7tLeA==}
+  '@tanstack/query-core@5.62.12':
+    resolution: {integrity: sha512-6igFeBgymHkCxVgaEk+yiLwkMf9haui/EQLmI3o9CatOyDThEoFKe8toLWvWliZC/Jf+h7NwHi/zjfyLArr1ow==}
 
-  '@tanstack/react-query@4.36.1':
-    resolution: {integrity: sha512-y7ySVHFyyQblPl3J3eQBWpXZkliroki3ARnBKsdJchlgt7yJLRDUcf4B8soufgiYt3pEQIkBWBx1N9/ZPIeUWw==}
+  '@tanstack/query-persist-client-core@5.62.12':
+    resolution: {integrity: sha512-4f2YA8ypb/U8jaqcHVZ8/PcnmxGsTjKomxS+WHMLLpauThakB/vMGENMD6p35/hVrpwNwBIJtZseyeKIJ9/ANw==}
+
+  '@tanstack/query-sync-storage-persister@5.62.12':
+    resolution: {integrity: sha512-nXUtIrDb0nVbRaVYS/eXds1DIRaLmEhSIsNwZM4h3cN5OoCeLCx9mff44bzHBnp0Q/fQAz6HbhLhh32jfJ41uw==}
+
+  '@tanstack/react-query-persist-client@5.62.14':
+    resolution: {integrity: sha512-GvxWRVZptBblqM716lEX0KlNFPHoN8iz1olTb5APk9XIySzZGynq7Cow3B3cbByGrUuowcrDStqkAClpMF2Taw==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
+      '@tanstack/react-query': ^5.62.14
+      react: ^18 || ^19
+
+  '@tanstack/react-query@5.62.14':
+    resolution: {integrity: sha512-ev/6eVdJvX9vpomKmFuXsrQb6TwqqBn/7OeB0KZkHjEYk/Bo1XBMj8wRmobn8pqdU8lK271tUjt+0B0UQ9MZ6A==}
+    peerDependencies:
+      react: ^18 || ^19
 
   '@tanstack/react-table@8.20.6':
     resolution: {integrity: sha512-w0jluT718MrOKthRcr2xsjqzx+oEM7B7s/XXyfs19ll++hlId3fjTm+B2zrR3ijpANpkzBAr15j1XGVOMxpggQ==}
@@ -2286,8 +2300,8 @@ packages:
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
 
-  fast-equals@5.0.1:
-    resolution: {integrity: sha512-WF1Wi8PwwSY7/6Kx0vKXtw8RwuSGoM1bvDaJbu7MxDlR1vovZjIAKrnzyrThgAjm6JDTu0fVgWXDlMGspodfoQ==}
+  fast-equals@5.1.3:
+    resolution: {integrity: sha512-6117/nJPFyrTjoCBQI7lpRFf+Oda4mH8HtlNMi28os+URb7MQU/dXUTrKhA2KR4G0O1MCfdi/KExIVEmzEh3qA==}
     engines: {node: '>=6.0.0'}
 
   fast-glob@3.3.2:
@@ -2449,6 +2463,9 @@ packages:
 
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
+
+  idb-keyval@6.2.1:
+    resolution: {integrity: sha512-8Sb3veuYCyrZL+VBt9LJfZjLUPWVvqn8tG28VqYNFCo43KHcKuq+b4EiXGeuaLAQWL2YmyDgMp2aSpH9JHsEQg==}
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -2752,6 +2769,20 @@ packages:
 
   motion-utils@11.14.3:
     resolution: {integrity: sha512-Xg+8xnqIJTpr0L/cidfTTBFkvRw26ZtGGuIhA94J9PQ2p4mEa06Xx7QVYZH0BP+EpMSaDlu+q0I0mmvwADPsaQ==}
+
+  motion@11.15.0:
+    resolution: {integrity: sha512-iZ7dwADQJWGsqsSkBhNHdI2LyYWU+hA1Nhy357wCLZq1yHxGImgt3l7Yv0HT/WOskcYDq9nxdedyl4zUv7UFFw==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0 || ^19.0.0
+      react-dom: ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
@@ -4711,15 +4742,27 @@ snapshots:
     dependencies:
       tailwindcss: 3.4.17
 
-  '@tanstack/query-core@4.36.1': {}
+  '@tanstack/query-core@5.62.12': {}
 
-  '@tanstack/react-query@4.36.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@tanstack/query-persist-client-core@5.62.12':
     dependencies:
-      '@tanstack/query-core': 4.36.1
+      '@tanstack/query-core': 5.62.12
+
+  '@tanstack/query-sync-storage-persister@5.62.12':
+    dependencies:
+      '@tanstack/query-core': 5.62.12
+      '@tanstack/query-persist-client-core': 5.62.12
+
+  '@tanstack/react-query-persist-client@5.62.14(@tanstack/react-query@5.62.14(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-persist-client-core': 5.62.12
+      '@tanstack/react-query': 5.62.14(react@18.3.1)
       react: 18.3.1
-      use-sync-external-store: 1.4.0(react@18.3.1)
-    optionalDependencies:
-      react-dom: 18.3.1(react@18.3.1)
+
+  '@tanstack/react-query@5.62.14(react@18.3.1)':
+    dependencies:
+      '@tanstack/query-core': 5.62.12
+      react: 18.3.1
 
   '@tanstack/react-table@8.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -5608,7 +5651,7 @@ snapshots:
 
   fast-deep-equal@3.1.3: {}
 
-  fast-equals@5.0.1: {}
+  fast-equals@5.1.3: {}
 
   fast-glob@3.3.2:
     dependencies:
@@ -5811,6 +5854,8 @@ snapshots:
   html-url-attributes@3.0.1: {}
 
   html-void-elements@3.0.0: {}
+
+  idb-keyval@6.2.1: {}
 
   ignore@5.3.2: {}
 
@@ -6217,6 +6262,14 @@ snapshots:
 
   motion-utils@11.14.3: {}
 
+  motion@11.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      framer-motion: 11.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      tslib: 2.8.1
+    optionalDependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   ms@2.1.3: {}
 
   mz@2.7.0:
@@ -6585,7 +6638,7 @@ snapshots:
 
   react-smooth@4.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      fast-equals: 5.0.1
+      fast-equals: 5.1.3
       prop-types: 15.8.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)

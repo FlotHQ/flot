@@ -1,33 +1,59 @@
 {
-	"name": "Flot Development Environment",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspace",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"esbenp.prettier-vscode",
-				"aaron-bond.better-comments",
-				"golang.go",
-				"christian-kohler.path-intellisense",
-				"YoavBls.pretty-ts-errors",
-				"peterj.proto",
-				"bradlc.vscode-tailwindcss"
-			]
-		}
-	},
-	"forwardPorts": [8008],
-	"hostRequirements": {
-		"cpus": 4,
-		"memory": "16gb"
-	},
-	"remoteUser": "root",
-	"postAttachCommand": "/bin/bash .devcontainer/setup.sh",
-	"postCreateCommand": "git config --global core.editor 'code --wait' && chmod 600 /root/.ssh/* && ssh-keyscan github.com >> /root/.ssh/known_hosts",
-	"mounts": [
-		"source=profile,target=/root,type=volume",
-		"target=/root/.vscode-server,type=volume",
-		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
-		"source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
-	]
+  "name": "Flot Development Environment",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.rulers": [80, 120],
+        "editor.minimap.enabled": false,
+
+        "git.enableSmartCommit": true,
+        "git.autofetch": true,
+
+        "tailwindCSS.experimental.classRegex": [
+          ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+          ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+        ],
+
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      },
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "aaron-bond.better-comments",
+        "golang.go",
+        "christian-kohler.path-intellisense",
+        "YoavBls.pretty-ts-errors",
+        "peterj.proto",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  },
+  "forwardPorts": [8008],
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb"
+  },
+  "remoteUser": "root",
+  "postAttachCommand": "/bin/bash .devcontainer/setup.sh",
+  "postCreateCommand": "git config --global core.editor 'code --wait' && chmod 600 /root/.ssh/* && ssh-keyscan github.com >> /root/.ssh/known_hosts",
+  "mounts": [
+    "source=profile,target=/root,type=volume",
+    "target=/root/.vscode-server,type=volume",
+    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
+  ]
 }
