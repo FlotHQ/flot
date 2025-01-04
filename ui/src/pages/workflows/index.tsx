@@ -24,7 +24,6 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { useUrlParams } from "~/hooks/useUrlParams/useUrlParams";
 import { UrlParamsProvider } from "~/hooks/useUrlParams";
-import { useQuery } from "@tanstack/react-query";
 
 dayjs.extend(relativeTime);
 
