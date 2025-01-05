@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/nats-io/nats.go"
-	"go.uber.org/zap"
+	"github.com/rs/zerolog"
 	"gorm.io/gorm"
 )
 
@@ -15,7 +15,7 @@ type BaseApp struct {
 	encryptionEnv string
 	nc            *nats.Conn
 	db            *gorm.DB
-	logger        *zap.Logger
+	logger        zerolog.Logger
 	ctx           context.Context
 }
 
@@ -25,28 +25,29 @@ type BaseAppConfig struct {
 	EncryptionEnv string
 	Nc            *nats.Conn
 	Db            *gorm.DB
-	Logger        *zap.Logger
+	Logger        zerolog.Logger
 	Ctx           context.Context
 }
 
 func NewBaseApp(config BaseAppConfig) *BaseApp {
-
-	return &BaseApp{
-		config.IsDev,
-		config.DataDir,
-		config.EncryptionEnv,
-		config.Nc,
-		config.Db,
-		config.Logger,
-		config.Ctx,
+	app := &BaseApp{
+		isDev:         config.IsDev,
+		dataDir:       config.DataDir,
+		encryptionEnv: config.EncryptionEnv,
+		nc:            config.Nc,
+		db:            config.Db,
+		logger:        config.Logger,
+		ctx:           config.Ctx,
 	}
+
+	return app
 }
 
 func (app *BaseApp) IsDev() bool {
 	return app.isDev
 }
 
-func (app *BaseApp) SetLogger(logger *zap.Logger) {
+func (app *BaseApp) SetLogger(logger zerolog.Logger) {
 	app.logger = logger
 }
 
@@ -62,7 +63,7 @@ func (app *BaseApp) NatsConn() *nats.Conn {
 	return app.nc
 }
 
-func (app *BaseApp) Logger() *zap.Logger {
+func (app *BaseApp) Logger() zerolog.Logger {
 	return app.logger
 }
 func (app *BaseApp) Db() *gorm.DB {

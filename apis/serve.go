@@ -13,9 +13,13 @@ import (
 	"github.com/fatih/color"
 	"github.com/flothq/flot/core"
 	"github.com/flothq/flot/models"
+	"github.com/flothq/flot/services"
+	"github.com/gorilla/sessions"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/nats-io/nats.go"
 	"golang.org/x/crypto/acme"
 	"golang.org/x/crypto/acme/autocert"
+	"gorm.io/gorm"
 )
 
 type ServeConfig struct {
@@ -24,19 +28,27 @@ type ServeConfig struct {
 	AllowedOrigins     []string
 	ShowStartBanner    bool
 	CertificateDomains []string
+	Database           *gorm.DB
+	NatsConn           *nats.Conn
+	Services           *services.Container
+	SessionStore       sessions.Store
+	DataDir            string
+	IsDev              bool
 }
 
-func Serve(app core.App, config ServeConfig) (*http.Server, error) {
-
+func Serve(config ServeConfig) (*http.Server, error) {
 	if len(config.AllowedOrigins) == 0 {
 		config.AllowedOrigins = []string{"*"}
 	}
 
-	if err := runMigrations(app); err != nil {
-		return nil, err
-	}
+	app := core.NewBaseApp(core.BaseAppConfig{
+		IsDev:   config.IsDev,
+		DataDir: config.DataDir,
+		Nc:      config.NatsConn,
+		Db:      config.Database,
+	})
 
-	router, err := InitApi(app)
+	router, err := InitApi(app, config.Services)
 	if err != nil {
 		return nil, err
 	}
@@ -61,7 +73,7 @@ func Serve(app core.App, config ServeConfig) (*http.Server, error) {
 	}
 	for _, host := range hostNames {
 		if strings.HasPrefix(host, "www.") {
-			continue // explicitly set www host
+			continue
 		}
 
 		wwwHost := "www." + host
@@ -81,7 +93,7 @@ func Serve(app core.App, config ServeConfig) (*http.Server, error) {
 
 	certManager := &autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
-		Cache:      autocert.DirCache(filepath.Join(app.DataDir(), ".autocert_cache")),
+		Cache:      autocert.DirCache(filepath.Join(config.DataDir, ".autocert_cache")),
 		HostPolicy: autocert.HostWhitelist(hostNames...),
 	}
 

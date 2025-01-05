@@ -1,0 +1,4 @@
+p, admin, /api/*, *
+p, user, /api/workflows/*, GET
+p, user, /api/workflows/*, POST
+g, admin, user 

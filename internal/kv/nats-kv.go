@@ -27,3 +27,8 @@ func (k *NatsKeyValue) Put(key string, value []byte) error {
 	_, err := k.kv.Put(context.Background(), key, value)
 	return err
 }
+
+func (k *NatsKeyValue) Delete(key string) error {
+	err := k.kv.Delete(context.Background(), key)
+	return err
+}

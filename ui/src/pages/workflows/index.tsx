@@ -41,7 +41,7 @@ type Workflow = {
     name: string;
     icon: string;
   }[];
-  lastRan: number; // Unix timestamp
+  lastRan: number;
   avgRunTime: number;
   healthTimeline: ("healthy" | "warning" | "error" | "inactive")[];
   tags: string[];
