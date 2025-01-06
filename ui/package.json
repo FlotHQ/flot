@@ -51,7 +51,7 @@
     "embla-carousel-class-names": "^8.5.1",
     "embla-carousel-react": "^8.5.1",
     "flexsearch": "^0.7.43",
-    "framer-motion": "^11.15.0",
+    "framer-motion": "^11.16.0",
     "immer": "^10.1.1",
     "lucide-react": "^0.469.0",
     "nanoid": "^5.0.9",
@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-    "@types/node": "^22.10.4",
+    "@types/node": "^22.10.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.4",
@@ -90,7 +90,7 @@
     "globals": "^15.14.0",
     "postcss": "^8",
     "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.0",
+    "typescript-eslint": "^8.19.1",
     "vite": "^5.4.11"
   }
 }
