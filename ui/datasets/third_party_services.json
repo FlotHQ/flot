@@ -1,0 +1,155 @@
+{
+  "fields": ["name", "id", "category", "description"],
+  "items": [
+    {
+      "name": "GitHub",
+      "id": "github.com",
+      "category": "Developer Tools",
+      "description": "Version control and collaboration platform for software development"
+    },
+    {
+      "name": "Slack",
+      "id": "slack.com",
+      "category": "Team Collaboration",
+      "description": "Business communication and team messaging platform"
+    },
+    {
+      "name": "Jira",
+      "id": "atlassian.com",
+      "category": "Project Management",
+      "description": "Issue tracking and project management software"
+    },
+    {
+      "name": "Notion",
+      "id": "notion.so",
+      "category": "Productivity",
+      "description": "All-in-one workspace for notes, docs, and project management"
+    },
+    {
+      "name": "Google Drive",
+      "id": "drive.google.com",
+      "category": "Cloud Storage",
+      "description": "Cloud storage and file synchronization service"
+    },
+    {
+      "name": "Dropbox",
+      "id": "dropbox.com",
+      "category": "Cloud Storage",
+      "description": "File hosting and synchronization service"
+    },
+    {
+      "name": "AWS S3",
+      "id": "aws.amazon.com/s3",
+      "category": "Cloud Storage",
+      "description": "Object storage service by Amazon Web Services"
+    },
+    {
+      "name": "Stripe",
+      "id": "stripe.com",
+      "category": "Payment Processing",
+      "description": "Online payment processing platform"
+    },
+    {
+      "name": "DocuSign",
+      "id": "docusign.com",
+      "category": "Document Management",
+      "description": "Electronic signature and agreement cloud platform"
+    },
+    {
+      "name": "Salesforce",
+      "id": "salesforce.com",
+      "category": "CRM",
+      "description": "Customer relationship management platform"
+    },
+    {
+      "name": "HubSpot",
+      "id": "hubspot.com",
+      "category": "Marketing",
+      "description": "Marketing, sales, and CRM software"
+    },
+    {
+      "name": "Mailchimp",
+      "id": "mailchimp.com",
+      "category": "Email Marketing",
+      "description": "Email marketing and automation platform"
+    },
+    {
+      "name": "Asana",
+      "id": "asana.com",
+      "category": "Project Management",
+      "description": "Project management and team collaboration tool"
+    },
+    {
+      "name": "Trello",
+      "id": "trello.com",
+      "category": "Project Management",
+      "description": "Visual collaboration tool for project management"
+    },
+    {
+      "name": "Zendesk",
+      "id": "zendesk.com",
+      "category": "Customer Support",
+      "description": "Customer service and engagement platform"
+    },
+    {
+      "name": "Microsoft Teams",
+      "id": "teams.microsoft.com",
+      "category": "Team Collaboration",
+      "description": "Business communication and collaboration platform"
+    },
+    {
+      "name": "Zoom",
+      "id": "zoom.us",
+      "category": "Video Conferencing",
+      "description": "Video conferencing and online meeting platform"
+    },
+    {
+      "name": "Intercom",
+      "id": "intercom.com",
+      "category": "Customer Engagement",
+      "description": "Customer messaging and support platform"
+    },
+    {
+      "name": "MongoDB Atlas",
+      "id": "mongodb.com/atlas",
+      "category": "Database",
+      "description": "Cloud database service"
+    },
+    {
+      "name": "Datadog",
+      "id": "datadoghq.com",
+      "category": "Monitoring",
+      "description": "Cloud monitoring and analytics platform"
+    },
+    {
+      "name": "PagerDuty",
+      "id": "pagerduty.com",
+      "category": "Incident Management",
+      "description": "Digital operations management platform"
+    },
+    {
+      "name": "Twilio",
+      "id": "twilio.com",
+      "category": "Communications",
+      "description": "Cloud communications platform"
+    },
+    {
+      "name": "Auth0",
+      "id": "auth0.com",
+      "category": "Authentication",
+      "description": "Identity and authentication platform"
+    },
+    {
+      "name": "SendGrid",
+      "id": "sendgrid.com",
+      "category": "Email Service",
+      "description": "Email delivery and marketing platform"
+    },
+    {
+      "name": "Cloudflare",
+      "id": "cloudflare.com",
+      "category": "Security",
+      "description": "Web infrastructure and security company"
+    }
+  ]
+}

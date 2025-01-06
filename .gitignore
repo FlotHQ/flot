@@ -33,4 +33,5 @@ flot_data
 .pnpm-store
 */**/flot-data
 
+*.db
 pkg

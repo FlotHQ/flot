@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build_search": "tsx build_search.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.1",
@@ -55,6 +56,7 @@
     "embla-carousel-react": "^8.5.1",
     "flexsearch": "^0.7.43",
     "framer-motion": "^11.15.0",
+    "fuse.js": "^7.0.0",
     "idb-keyval": "^6.2.1",
     "immer": "^10.1.1",
     "lucide-react": "^0.469.0",
@@ -80,13 +82,13 @@
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
     "tippy.js": "^6.3.7",
-    "usehooks-ts": "^2.14.0",
+    "usehooks-ts": "^2.16.0",
     "vaul": "^0.9.9",
     "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
-    "@types/node": "^22.10.4",
+    "@types/node": "^22.10.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.4",
@@ -96,6 +98,7 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
     "postcss": "^8",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.19.0",
     "vite": "^5.4.11"

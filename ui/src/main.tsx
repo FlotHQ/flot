@@ -68,8 +68,9 @@ const router = createBrowserRouter([
       },
       {
         children: [
-          { path: "/login", lazy: () => import("./pages/auth/login") },
-          { path: "/signup", lazy: () => import("./pages/auth/signup") },
+          { path: "/login", lazy: () => import("./pages/login") },
+          { path: "/signup", lazy: () => import("./pages/signup") },
+          { path: "/onboarding", lazy: () => import("./pages/onboarding") },
         ],
       },
     ],
